@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>GBE Daily Equipment Inspection</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gbe-gold: #D4A630;
+  --gbe-dark: #1A1A1A;
+  --gbe-darker: #111111;
+  --gbe-card: #222222;
+  --gbe-card-border: #333333;
+  --gbe-text: #E8E8E8;
+  --gbe-muted: #888888;
+  --gbe-green: #2ECC71;
+  --gbe-yellow: #F39C12;
+  --gbe-red: #E74C3C;
+  --gbe-blue: #3498DB;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Barlow', sans-serif;
+  background: var(--gbe-darker);
+  color: var(--gbe-text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Header */
+.header {
+  background: var(--gbe-dark);
+  border-bottom: 3px solid var(--gbe-gold);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header img { height: 52px; width: auto; }
+.header-text { flex: 1; }
+.header-text h1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--gbe-gold);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  line-height: 1.1;
+}
+.header-text p {
+  font-size: 11px;
+  color: var(--gbe-muted);
+  margin-top: 2px;
+}
+
+/* Progress bar */
+.progress-bar {
+  background: var(--gbe-dark);
+  padding: 8px 20px;
+  position: sticky;
+  top: 87px;
+  z-index: 99;
+  border-bottom: 1px solid var(--gbe-card-border);
+}
+.progress-track {
+  height: 4px;
+  background: var(--gbe-card-border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--gbe-gold);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+  width: 0%;
+}
+.progress-label {
+  font-size: 11px;
+  color: var(--gbe-muted);
+  margin-top: 4px;
+  text-align: right;
+}
+
+/* Container */
+.container { padding: 16px 16px 100px; max-width: 600px; margin: 0 auto; }
+
+/* Sections */
+.section {
+  background: var(--gbe-card);
+  border: 1px solid var(--gbe-card-border);
+  border-radius: 10px;
+  margin-bottom: 14px;
+  overflow: hidden;
+  display: none;
+}
+.section.active { display: block; }
+.section-header {
+  background: var(--gbe-dark);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--gbe-card-border);
+}
+.section-num {
+  width: 28px;
+  height: 28px;
+  background: var(--gbe-gold);
+  color: var(--gbe-dark);
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+.section-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.section-body { padding: 16px; }
+
+/* Form fields */
+.field { margin-bottom: 16px; }
+.field-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gbe-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+.field-input, .field-select {
+  width: 100%;
+  background: var(--gbe-dark);
+  border: 1px solid var(--gbe-card-border);
+  border-radius: 6px;
+  color: var(--gbe-text);
+  font-family: 'Barlow', sans-serif;
+  font-size: 16px;
+  padding: 12px;
+  outline: none;
+  -webkit-appearance: none;
+}
+.field-input:focus, .field-select:focus {
+  border-color: var(--gbe-gold);
+}
+.field-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23D4A630' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+.field-row { display: flex; gap: 12px; }
+.field-row .field { flex: 1; }
+
+/* Inspection type selector */
+.type-selector {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.type-btn {
+  flex: 1;
+  min-width: 120px;
+  padding: 14px 12px;
+  background: var(--gbe-dark);
+  border: 2px solid var(--gbe-card-border);
+  border-radius: 8px;
+  color: var(--gbe-text);
+  font-family: 'Barlow', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.type-btn.selected {
+  border-color: var(--gbe-gold);
+  background: rgba(212,166,48,0.1);
+  color: var(--gbe-gold);
+}
+.type-btn:active { transform: scale(0.97); }
+
+/* Checklist */
+.checklist-item {
+  background: var(--gbe-dark);
+  border: 1px solid var(--gbe-card-border);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+}
+.checklist-label {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+.checklist-options {
+  display: flex;
+  gap: 6px;
+}
+.check-btn {
+  flex: 1;
+  padding: 8px 4px;
+  border: 1.5px solid var(--gbe-card-border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--gbe-muted);
+  font-family: 'Barlow', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+.check-btn.good.selected { background: rgba(46,204,113,0.15); border-color: var(--gbe-green); color: var(--gbe-green); }
+.check-btn.attention.selected { background: rgba(243,156,18,0.15); border-color: var(--gbe-yellow); color: var(--gbe-yellow); }
+.check-btn.oos.selected { background: rgba(231,76,60,0.15); border-color: var(--gbe-red); color: var(--gbe-red); }
+.check-btn.na.selected { background: rgba(136,136,136,0.15); border-color: var(--gbe-muted); color: var(--gbe-muted); }
+
+/* Issue detail (shown when attention or OOS selected) */
+.issue-detail {
+  margin-top: 8px;
+  display: none;
+}
+.issue-detail.visible { display: block; }
+.issue-input {
+  width: 100%;
+  background: var(--gbe-darker);
+  border: 1px solid var(--gbe-card-border);
+  border-radius: 6px;
+  color: var(--gbe-text);
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  padding: 10px;
+  outline: none;
+  resize: vertical;
+  min-height: 60px;
+}
+.issue-input:focus { border-color: var(--gbe-yellow); }
+
+/* Photo upload */
+.photo-upload {
+  border: 2px dashed var(--gbe-card-border);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.photo-upload:active { border-color: var(--gbe-gold); }
+.photo-upload-icon { font-size: 28px; margin-bottom: 6px; }
+.photo-upload-text { font-size: 13px; color: var(--gbe-muted); }
+.photo-preview { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.photo-thumb {
+  width: 60px; height: 60px;
+  border-radius: 6px;
+  object-fit: cover;
+  border: 1px solid var(--gbe-card-border);
+}
+
+/* Buttons */
+.btn-row { display: flex; gap: 10px; margin-top: 16px; }
+.btn {
+  flex: 1;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Barlow', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn:active { transform: scale(0.97); }
+.btn-next { background: var(--gbe-gold); color: var(--gbe-dark); }
+.btn-back { background: var(--gbe-card-border); color: var(--gbe-text); }
+.btn-submit { background: var(--gbe-green); color: white; }
+.btn:disabled { opacity: 0.4; pointer-events: none; }
+
+/* Summary */
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--gbe-card-border);
+  font-size: 14px;
+}
+.summary-label { color: var(--gbe-muted); }
+.summary-value { font-weight: 600; }
+.summary-good { color: var(--gbe-green); }
+.summary-attention { color: var(--gbe-yellow); }
+.summary-oos { color: var(--gbe-red); }
+
+/* Alerts */
+.alert-box {
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.alert-oos {
+  background: rgba(231,76,60,0.15);
+  border: 1px solid var(--gbe-red);
+  color: var(--gbe-red);
+}
+.alert-attention {
+  background: rgba(243,156,18,0.15);
+  border: 1px solid var(--gbe-yellow);
+  color: var(--gbe-yellow);
+}
+
+/* Success screen */
+.success-screen {
+  display: none;
+  text-align: center;
+  padding: 60px 20px;
+}
+.success-screen.active { display: block; }
+.success-icon { font-size: 64px; margin-bottom: 16px; }
+.success-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--gbe-green);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.success-msg { color: var(--gbe-muted); font-size: 14px; line-height: 1.5; }
+.success-id { color: var(--gbe-gold); font-weight: 700; font-size: 16px; margin-top: 12px; }
+
+/* Timestamp footer */
+.timestamp {
+  text-align: center;
+  font-size: 11px;
+  color: var(--gbe-muted);
+  padding: 20px 0;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <img src="data:image/png;base64,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" alt="GBE" id="gbeLogo">
+  <div class="header-text">
+    <h1>Daily Equipment<br>Inspection</h1>
+    <p>Golden Bear Equipment Co.</p>
+  </div>
+</div>
+
+<div class="progress-bar">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label" id="progressLabel">Step 1 of 5</div>
+</div>
+
+<div class="container" id="formContainer">
+
+  <!-- SECTION 1: Operator & Equipment Info -->
+  <div class="section active" id="section1">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">Operator & Equipment</div>
+    </div>
+    <div class="section-body">
+      <div class="field">
+        <div class="field-label">Operator Name</div>
+        <input class="field-input" id="operatorName" placeholder="Enter your full name" autocomplete="name">
+      </div>
+      <div class="field">
+        <div class="field-label">Inspection Type</div>
+        <div class="type-selector">
+          <button class="type-btn" onclick="setInspectionType('daily')" id="typeDaily">Daily Pre-Use</button>
+          <button class="type-btn" onclick="setInspectionType('transfer')" id="typeTransfer">Transfer / Receiving</button>
+        </div>
+      </div>
+      <div class="field" id="transferFromField" style="display:none;">
+        <div class="field-label">Received From (Job or Yard)</div>
+        <input class="field-input" id="transferFrom" placeholder="e.g. Job 26075 BNSF or Riverside Yard">
+      </div>
+      <div class="field">
+        <div class="field-label">Equipment Type</div>
+        <select class="field-select" id="equipType" onchange="updateUnitList()">
+          <option value="">Select type</option>
+          <option value="EX">Excavator</option>
+          <option value="BH">Backhoe</option>
+          <option value="LD">Loader (Rubber Tire)</option>
+          <option value="SL">Skip Loader</option>
+          <option value="SS">Skid Steer</option>
+          <option value="DZ">Dozer</option>
+          <option value="MG">Motor Grader</option>
+          <option value="DT">Dump Truck</option>
+          <option value="WT">Water Truck</option>
+          <option value="ST">Lowbed Truck</option>
+          <option value="CT">Crane Truck</option>
+          <option value="VT">Vac Truck / Hydroex</option>
+          <option value="MT">Mechanic Truck</option>
+          <option value="FT">Fuel Truck</option>
+          <option value="BT">Truck Mounted Backhoe</option>
+          <option value="SW">Street Sweeper</option>
+          <option value="UT">Utility Truck</option>
+          <option value="SA">Arrow Board / SATC Truck</option>
+          <option value="AR">Roller / Compactor</option>
+          <option value="AP">Asphalt Paver</option>
+          <option value="FL">Forklift</option>
+          <option value="RL">Reach Lift</option>
+          <option value="XX">Other</option>
+        </select>
+      </div>
+      <div class="field" id="otherEquipField" style="display:none;">
+        <div class="field-label">Describe Equipment</div>
+        <input class="field-input" id="otherEquipDesc" placeholder="e.g. 2018 Ditch Witch Vacuum Excavator">
+      </div>
+      <div class="field">
+        <div class="field-label">Unit Number</div>
+        <select class="field-select" id="unitNumber">
+          <option value="">Select equipment type first</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="field-label">Job Number</div>
+        <input class="field-input" id="jobNumber" placeholder="e.g. 26075" inputmode="text">
+      </div>
+      <div class="field">
+        <div class="field-label">Job Site / Location</div>
+        <input class="field-input" id="jobSite" placeholder="e.g. BNSF Barstow or Riverside Yard">
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-next" onclick="nextSection(2)" id="btn1">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: Mileage / Hours -->
+  <div class="section" id="section2">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">Mileage / Hours</div>
+    </div>
+    <div class="section-body">
+      <div class="field" id="odometerField">
+        <div class="field-label">Odometer Reading</div>
+        <input class="field-input" id="odometer" type="number" inputmode="numeric" placeholder="Current mileage">
+      </div>
+      <div class="field" id="hourmeterField">
+        <div class="field-label">Hourmeter Reading</div>
+        <input class="field-input" id="hourmeter" type="number" inputmode="decimal" step="0.1" placeholder="Current hours">
+      </div>
+      <div class="field" id="fuelField">
+        <div class="field-label">Fuel Level</div>
+        <select class="field-select" id="fuelLevel">
+          <option value="">Select fuel level</option>
+          <option value="Full">Full</option>
+          <option value="3/4">3/4</option>
+          <option value="1/2">1/2</option>
+          <option value="1/4">1/4</option>
+          <option value="Empty">Empty / Near Empty</option>
+        </select>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-back" onclick="prevSection(1)">Back</button>
+        <button class="btn btn-next" onclick="nextSection(3)">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: Inspection Checklist (dynamically populated) -->
+  <div class="section" id="section3">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">Inspection Checklist</div>
+    </div>
+    <div class="section-body">
+      <div id="checklistContainer"></div>
+      <div class="btn-row">
+        <button class="btn btn-back" onclick="prevSection(2)">Back</button>
+        <button class="btn btn-next" onclick="nextSection(4)">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: Photos & Notes -->
+  <div class="section" id="section4">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">Photos & Notes</div>
+    </div>
+    <div class="section-body">
+      <div class="field">
+        <div class="field-label">Photos (tap to add)</div>
+        <label class="photo-upload" for="photoInput">
+          <div class="photo-upload-icon">📷</div>
+          <div class="photo-upload-text">Tap to take photo or choose from gallery</div>
+        </label>
+        <input type="file" id="photoInput" accept="image/*" capture="environment" multiple style="display:none" onchange="handlePhotos(this)">
+        <div class="photo-preview" id="photoPreview"></div>
+      </div>
+      <div class="field">
+        <div class="field-label">Additional Notes</div>
+        <textarea class="issue-input" id="additionalNotes" placeholder="Any other observations, damage, or comments..." rows="3"></textarea>
+      </div>
+      <div class="field" id="damageField" style="display:none;">
+        <div class="field-label">Damage Noted on Arrival (Transfer Only)</div>
+        <textarea class="issue-input" id="damageNotes" placeholder="Describe any damage observed when receiving this equipment..." rows="3"></textarea>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-back" onclick="prevSection(3)">Back</button>
+        <button class="btn btn-next" onclick="nextSection(5)">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5: Review & Submit -->
+  <div class="section" id="section5">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">Review & Submit</div>
+    </div>
+    <div class="section-body">
+      <div id="summaryContainer"></div>
+      <div id="alertsContainer" style="margin-top:14px;"></div>
+      <div class="btn-row">
+        <button class="btn btn-back" onclick="prevSection(4)">Back</button>
+        <button class="btn btn-submit" onclick="submitInspection()">Submit Inspection</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Success Screen -->
+<div class="success-screen" id="successScreen">
+  <div class="success-icon">✅</div>
+  <div class="success-title">Inspection Submitted</div>
+  <div class="success-msg">Your inspection has been recorded successfully.</div>
+  <div class="success-id" id="successId"></div>
+  <div class="success-msg" id="alertMsg" style="margin-top:16px;"></div>
+  <div class="btn-row" style="max-width:300px;margin:30px auto 0;">
+    <button class="btn btn-next" onclick="resetForm()">New Inspection</button>
+  </div>
+</div>
+
+<div class="timestamp" id="footerTimestamp"></div>
+
+<script>
+// ============================================================
+// CONFIGURATION - Derek updates this section or it pulls from
+// a Google Sheet "Units" tab
+// ============================================================
+
+const UNITS = {
+  EX: ['EX01','EX02','EX03','EX04','EX05','EX06','EX07','EX08','EX09','EX10',
+       'EX11','EX12','EX13','EX14','EX15','EX16','EX17','EX18','EX19','EX20',
+       'EX21','EX22','EX23','EX24','EX25','EX26','EX27','EX28','EX29','EX30',
+       'EX31','EX32','EX33','EX34','EX35','EX36','EX37','EX38','EX39','EX40','EX41','EX42'],
+  BH: ['BH01','BH02','BH03','BH04','BH05','BH06','BH07','BH08','BH09','BH10',
+       'BH11','BH12','BH13','BH14','BH15','BH16','BH17','BH18','BH19','BH20','BH21'],
+  LD: ['LD01','LD02','LD03','LD04','LD05'],
+  SL: ['SL01','SL02','SL03','SL04','SL05','SL06','SL07'],
+  SS: ['SS01','SS02','SS03','SS04','SS05','SS06','SS07','SS08','SS09','SS10',
+       'SS11','SS12','SS13','SS14','SS15','SS16'],
+  DZ: ['DZ01','DZ02','DZ03','DZ04','DZ05'],
+  MG: ['MG01','MG02','MG03','MG04','MG05','MG06'],
+  DT: ['DT01','DT02','DT03','DT04','DT05','DT06','DT07','DT08','DT09','DT10','DT11','DT12'],
+  WT: ['WT01','WT02','WT03','WT04','WT05','WT06','WT07','WT08','WT09','WT10',
+       'WT11','WT12','WT13','WT14','WT15','WT16'],
+  ST: ['ST01','ST02','ST03'],
+  CT: ['CT01','CT02'],
+  VT: ['VT01','VT02','VT03','VT04'],
+  MT: ['MT01'],
+  FT: ['FT01','FT02','FT03','FT04'],
+  BT: ['BT01','BT02','BT03','BT04','BT05','BT06','BT07','BT08','BT09','BT10','BT11','BT12','BT13'],
+  SW: ['SW01','SW02','SW03'],
+  UT: Array.from({length:90}, (_,i) => 'UT'+(i+1<10?'0':'')+(i+1)),
+  SA: Array.from({length:39}, (_,i) => 'SA'+(i+1<10?'0':'')+(i+1)),
+  AR: ['AR01','AR02','AR03','AR04','AR05','AR06','AR07','AR08','AR09'],
+  AP: ['AP01','AP02','AP03'],
+  FL: ['FL01','FL02','FL03','FL04','FL05','FL06','FL07','FL08'],
+  RL: ['RL01','RL02','RL03','RL04','RL05','RL06','RL07','RL08','RL09','RL10','RL11'],
+  XX: ['OTHER'],
+};
+
+// Operators - maintained by Derek
+const OPERATORS = [
+  'Select your name',
+  // Add operator names here alphabetically
+].sort();
+
+// Equipment type categories for checklist logic
+const TRUCK_TYPES = ['DT','WT','ST','CT','VT','MT','FT','BT','SW','UT','SA','XX'];
+const IRON_TYPES = ['EX','BH','LD','SL','SS','DZ','MG','AR','AP','FL','RL'];
+
+// Uses odometer (trucks) vs hourmeter (iron)
+const ODOMETER_TYPES = TRUCK_TYPES;
+const HOURMETER_TYPES = IRON_TYPES;
+
+// Checklist items by category
+const CHECKLIST = {
+  common: [
+    { id: 'leaks', label: 'Leaks (oil, coolant, hydraulic)' },
+    { id: 'fire_ext', label: 'Fire extinguisher present & charged' },
+    { id: 'lights', label: 'Lights & reflectors' },
+    { id: 'horn', label: 'Horn / backup alarm' },
+    { id: 'fluid_levels', label: 'Engine oil, coolant, hydraulic fluid' },
+    { id: 'physical', label: 'Physical condition (dents, cracks, damage)' },
+  ],
+  truck: [
+    { id: 'brakes', label: 'Brakes (service, parking, emergency)' },
+    { id: 'tires', label: 'Tires / tire pressure / lug nuts' },
+    { id: 'cab', label: 'Cab, mirrors, seatbelt, glass' },
+    { id: 'steering', label: 'Steering (standard & emergency)' },
+    { id: 'exhaust', label: 'Exhaust system' },
+    { id: 'wipers', label: 'Windshield wipers & washers' },
+    { id: 'coupling', label: 'Coupling devices / connectors' },
+    { id: 'gauges', label: 'Gauges & instruments' },
+  ],
+  iron: [
+    { id: 'tracks_tires', label: 'Tracks / tires condition' },
+    { id: 'boom', label: 'Boom, stick, blade, bucket condition' },
+    { id: 'hydraulic_hoses', label: 'Hydraulic hoses & fittings' },
+    { id: 'controls', label: 'Operating controls' },
+    { id: 'guards', label: 'Guards & safety devices' },
+    { id: 'cab_rops', label: 'Cab / ROPS / seatbelt' },
+    { id: 'ground_engage', label: 'Ground engaging tools (teeth, edges)' },
+    { id: 'pins_bushings', label: 'Pins, bushings, grease fittings' },
+  ],
+  crane: [
+    { id: 'load_chart', label: 'Load charts / placard' },
+    { id: 'outriggers', label: 'Outriggers' },
+    { id: 'wire_rope', label: 'Wire rope / rigging' },
+    { id: 'limit_switch', label: 'Limit switches' },
+    { id: 'ops_manual', label: "Operator's manual present" },
+  ],
+  forklift: [
+    { id: 'forks', label: 'Fork condition & locking pins' },
+    { id: 'mast', label: 'Mast, chains, rollers' },
+    { id: 'overhead_guard', label: 'Overhead guard' },
+  ]
+};
+
+// ============================================================
+// STATE
+// ============================================================
+let currentSection = 1;
+let inspectionType = '';
+let checklistState = {};
+let photoFiles = [];
+
+// ============================================================
+// FUNCTIONS
+// ============================================================
+
+function setInspectionType(type) {
+  inspectionType = type;
+  document.getElementById('typeDaily').classList.toggle('selected', type === 'daily');
+  document.getElementById('typeTransfer').classList.toggle('selected', type === 'transfer');
+  document.getElementById('transferFromField').style.display = type === 'transfer' ? 'block' : 'none';
+  document.getElementById('damageField').style.display = type === 'transfer' ? 'block' : 'none';
+}
+
+function updateUnitList() {
+  const type = document.getElementById('equipType').value;
+  const unitSel = document.getElementById('unitNumber');
+  unitSel.innerHTML = '<option value="">Select unit</option>';
+
+  // Show/hide Other equipment description field
+  document.getElementById('otherEquipField').style.display = type === 'XX' ? 'block' : 'none';
+
+  if (type && UNITS[type]) {
+    UNITS[type].forEach(u => {
+      const opt = document.createElement('option');
+      opt.value = u;
+      opt.textContent = u;
+      unitSel.appendChild(opt);
+    });
+  }
+
+  // Show/hide odometer vs hourmeter
+  const isOdo = ODOMETER_TYPES.includes(type);
+  const isHour = HOURMETER_TYPES.includes(type);
+  if (document.getElementById('odometerField')) {
+    document.getElementById('odometerField').style.display = isOdo ? 'block' : 'none';
+  }
+  if (document.getElementById('hourmeterField')) {
+    document.getElementById('hourmeterField').style.display = isHour ? 'block' : 'none';
+  }
+}
+
+function buildChecklist() {
+  const type = document.getElementById('equipType').value;
+  const container = document.getElementById('checklistContainer');
+  container.innerHTML = '';
+  checklistState = {};
+
+  let items = [...CHECKLIST.common];
+
+  if (TRUCK_TYPES.includes(type)) {
+    items = items.concat(CHECKLIST.truck);
+  }
+  if (IRON_TYPES.includes(type)) {
+    items = items.concat(CHECKLIST.iron);
+  }
+  if (type === 'CT') {
+    items = items.concat(CHECKLIST.crane);
+  }
+  if (type === 'FL' || type === 'RL') {
+    items = items.concat(CHECKLIST.forklift);
+  }
+
+  items.forEach(item => {
+    checklistState[item.id] = { status: '', notes: '' };
+
+    const div = document.createElement('div');
+    div.className = 'checklist-item';
+    div.id = 'cl-' + item.id;
+    div.innerHTML = `
+      <div class="checklist-label">${item.label}</div>
+      <div class="checklist-options">
+        <button class="check-btn good" onclick="setCheck('${item.id}','good',this)">Good</button>
+        <button class="check-btn attention" onclick="setCheck('${item.id}','attention',this)">Needs<br>Attention</button>
+        <button class="check-btn oos" onclick="setCheck('${item.id}','oos',this)">Out of<br>Service</button>
+        <button class="check-btn na" onclick="setCheck('${item.id}','na',this)">N/A</button>
+      </div>
+      <div class="issue-detail" id="detail-${item.id}">
+        <textarea class="issue-input" placeholder="Describe the issue..." 
+          oninput="checklistState['${item.id}'].notes=this.value"></textarea>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function setCheck(id, status, btn) {
+  checklistState[id].status = status;
+
+  // Update button styling
+  const parent = btn.parentElement;
+  parent.querySelectorAll('.check-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+
+  // Show/hide issue detail
+  const detail = document.getElementById('detail-' + id);
+  if (status === 'attention' || status === 'oos') {
+    detail.classList.add('visible');
+  } else {
+    detail.classList.remove('visible');
+    checklistState[id].notes = '';
+  }
+}
+
+function handlePhotos(input) {
+  const preview = document.getElementById('photoPreview');
+  if (!window.photoBase64) window.photoBase64 = [];
+  if (!window.photoPromises) window.photoPromises = [];
+  Array.from(input.files).forEach(file => {
+    photoFiles.push(file);
+    const promise = new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.className = 'photo-thumb';
+        preview.appendChild(img);
+        window.photoBase64.push({
+          name: file.name,
+          type: file.type,
+          data: e.target.result.split(',')[1]
+        });
+        resolve();
+      };
+      reader.readAsDataURL(file);
+    });
+    window.photoPromises.push(promise);
+  });
+}
+
+function updateProgress() {
+  const pct = ((currentSection - 1) / 4) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `Step ${currentSection} of 5`;
+}
+
+function nextSection(num) {
+  // Build checklist when moving to section 3
+  if (num === 3) buildChecklist();
+
+  // Validate checklist completion before advancing from section 3
+  if (currentSection === 3 && num === 4) {
+    const total = Object.keys(checklistState).length;
+    const checked = Object.values(checklistState).filter(s => s.status !== '').length;
+    if (checked < total) {
+      const unchecked = total - checked;
+      alert(`Please complete all checklist items before proceeding. ${unchecked} item(s) remaining.`);
+
+      // Highlight unchecked items
+      Object.entries(checklistState).forEach(([id, state]) => {
+        const el = document.getElementById('cl-' + id);
+        if (el) {
+          if (state.status === '') {
+            el.style.borderColor = 'var(--gbe-red)';
+            el.style.borderWidth = '2px';
+          } else {
+            el.style.borderColor = 'var(--gbe-card-border)';
+            el.style.borderWidth = '1px';
+          }
+        }
+      });
+
+      // Scroll to first unchecked
+      const firstUnchecked = Object.entries(checklistState).find(([id, s]) => s.status === '');
+      if (firstUnchecked) {
+        const el = document.getElementById('cl-' + firstUnchecked[0]);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
+  }
+
+  // Build summary when moving to section 5
+  if (num === 5) buildSummary();
+
+  document.getElementById('section' + currentSection).classList.remove('active');
+  currentSection = num;
+  document.getElementById('section' + currentSection).classList.add('active');
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function prevSection(num) {
+  document.getElementById('section' + currentSection).classList.remove('active');
+  currentSection = num;
+  document.getElementById('section' + currentSection).classList.add('active');
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function buildSummary() {
+  const summary = document.getElementById('summaryContainer');
+  const alerts = document.getElementById('alertsContainer');
+  const type = document.getElementById('equipType');
+  const typeName = type.options[type.selectedIndex]?.text || '';
+
+  let goodCount = 0, attCount = 0, oosCount = 0, naCount = 0;
+  let issues = [];
+
+  Object.entries(checklistState).forEach(([id, state]) => {
+    if (state.status === 'good') goodCount++;
+    else if (state.status === 'attention') { attCount++; issues.push({id, ...state}); }
+    else if (state.status === 'oos') { oosCount++; issues.push({id, ...state}); }
+    else if (state.status === 'na') naCount++;
+  });
+
+  const totalChecked = goodCount + attCount + oosCount + naCount;
+  const totalItems = Object.keys(checklistState).length;
+
+  summary.innerHTML = `
+    <div class="summary-row">
+      <span class="summary-label">Operator</span>
+      <span class="summary-value">${document.getElementById('operatorName').value || 'Not selected'}</span>
+    </div>
+    <div class="summary-row">
+      <span class="summary-label">Type</span>
+      <span class="summary-value">${inspectionType === 'transfer' ? 'Transfer / Receiving' : 'Daily Pre-Use'}</span>
+    </div>
+    <div class="summary-row">
+      <span class="summary-label">Equipment</span>
+      <span class="summary-value">${typeName} - ${document.getElementById('unitNumber').value}</span>
+    </div>
+    <div class="summary-row">
+      <span class="summary-label">Job Number</span>
+      <span class="summary-value">${document.getElementById('jobNumber').value || 'Not entered'}</span>
+    </div>
+    <div class="summary-row">
+      <span class="summary-label">Job Site</span>
+      <span class="summary-value">${document.getElementById('jobSite').value || 'Not entered'}</span>
+    </div>
+    <div class="summary-row">
+      <span class="summary-label">Items Checked</span>
+      <span class="summary-value">${totalChecked} of ${totalItems}</span>
+    </div>
+    <div class="summary-row">
+      <span class="summary-label summary-good">Good</span>
+      <span class="summary-value summary-good">${goodCount}</span>
+    </div>
+    ${attCount > 0 ? `<div class="summary-row">
+      <span class="summary-label summary-attention">Needs Attention</span>
+      <span class="summary-value summary-attention">${attCount}</span>
+    </div>` : ''}
+    ${oosCount > 0 ? `<div class="summary-row">
+      <span class="summary-label summary-oos">Out of Service</span>
+      <span class="summary-value summary-oos">${oosCount}</span>
+    </div>` : ''}
+    <div class="summary-row">
+      <span class="summary-label">Photos</span>
+      <span class="summary-value">${photoFiles.length}</span>
+    </div>
+  `;
+
+  // Alerts
+  alerts.innerHTML = '';
+  if (oosCount > 0) {
+    alerts.innerHTML += `<div class="alert-box alert-oos">
+      ⚠️ OUT OF SERVICE items detected. Aaron Imera, Jerry Neuman, Derek Alonso, Karun Mani, and Kirby Hays will be notified automatically.
+    </div>`;
+  }
+  if (attCount > 0) {
+    alerts.innerHTML += `<div class="alert-box alert-attention">
+      ⚡ NEEDS ATTENTION items detected. Aaron Imera, Jerry Neuman, Derek Alonso, Karun Mani, and Kirby Hays will be notified automatically.
+    </div>`;
+  }
+  if (totalChecked < totalItems) {
+    alerts.innerHTML += `<div class="alert-box alert-attention">
+      ${totalItems - totalChecked} item(s) not yet checked. Please go back and complete all items.
+    </div>`;
+  }
+}
+
+function submitInspection() {
+  const now = new Date();
+  const id = 'INS-' + now.getFullYear() +
+    String(now.getMonth()+1).padStart(2,'0') +
+    String(now.getDate()).padStart(2,'0') + '-' +
+    String(now.getHours()).padStart(2,'0') +
+    String(now.getMinutes()).padStart(2,'0') +
+    String(now.getSeconds()).padStart(2,'0');
+
+  const data = {
+    inspectionId: id,
+    timestamp: now.toISOString(),
+    operator: document.getElementById('operatorName').value,
+    inspectionType: inspectionType,
+    transferFrom: document.getElementById('transferFrom')?.value || '',
+    equipmentType: document.getElementById('equipType').options[document.getElementById('equipType').selectedIndex].text,
+    otherEquipDesc: document.getElementById('otherEquipDesc')?.value || '',
+    unitNumber: document.getElementById('unitNumber').value,
+    jobNumber: document.getElementById('jobNumber')?.value || '',
+    jobSite: document.getElementById('jobSite').value,
+    odometer: document.getElementById('odometer')?.value || '',
+    hourmeter: document.getElementById('hourmeter')?.value || '',
+    fuelLevel: document.getElementById('fuelLevel')?.value || '',
+    checklist: checklistState,
+    additionalNotes: document.getElementById('additionalNotes')?.value || '',
+    damageNotes: document.getElementById('damageNotes')?.value || '',
+    photoCount: photoFiles.length,
+    photos: window.photoBase64 || [],
+  };
+
+  // Submit to Google Sheet
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxMHCFmafkTJhxTdLzHjIdqazD9VBTuVRWTMKBZWcCiDsfYF-h1n61EzQQ3iTbl8RSUUg/exec';
+
+  Promise.all(window.photoPromises || []).then(() => {
+    data.photos = window.photoBase64 || [];
+    data.photoCount = data.photos.length;
+    const encoded = encodeURIComponent(JSON.stringify(data));
+    const img = new Image();
+    img.src = SCRIPT_URL + '?data=' + encoded;
+  });
+
+  // Show success
+  document.getElementById('formContainer').style.display = 'none';
+  document.querySelector('.progress-bar').style.display = 'none';
+  const ss = document.getElementById('successScreen');
+  ss.classList.add('active');
+  document.getElementById('successId').textContent = 'Reference: ' + id;
+
+  let hasOOS = Object.values(checklistState).some(s => s.status === 'oos');
+  let hasAtt = Object.values(checklistState).some(s => s.status === 'attention');
+
+  let msg = '';
+  if (hasOOS) msg = '🔴 OUT OF SERVICE alert sent to Aaron, Jerry, Derek, Karun, and Kirby.';
+  else if (hasAtt) msg = '🟡 NEEDS ATTENTION alert sent to Aaron, Jerry, Derek, Karun, and Kirby.';
+  else msg = '🟢 All items passed. No alerts triggered.';
+  document.getElementById('alertMsg').textContent = msg;
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function resetForm() {
+  location.reload();
+}
+
+// Init
+function init() {
+  updateProgress();
+  const now = new Date();
+  document.getElementById('footerTimestamp').textContent =
+    'Golden Bear Equipment Co. | A Hays Group Company | ' +
+    now.toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+}
+
+init();
+</script>
+</body>
+</html>
