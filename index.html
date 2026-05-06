@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>GBE Daily Equipment Inspection</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#111;color:#e8e8e8;min-height:100vh;-webkit-font-smoothing:antialiased;padding-bottom:60px}
+.hdr{background:#1a1a1a;border-bottom:3px solid #D4A630;padding:14px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100}
+.hdr img{height:48px;width:auto}
+.hdr h1{font-size:17px;font-weight:700;color:#D4A630;text-transform:uppercase;letter-spacing:.5px;line-height:1.2}
+.hdr p{font-size:11px;color:#7a8baa;margin-top:2px}
+.ctr{padding:12px;max-width:600px;margin:0 auto}
+.cd{background:#222;border:1px solid #333;border-radius:10px;margin-bottom:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.ch{background:#1a1a1a;padding:12px 14px;border-bottom:1px solid #333;font-size:15px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:10px;color:#e8e8e8}
+.hx{width:26px;height:26px;background:#D4A630;color:#1a1a1a;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);flex-shrink:0}
+.cb{padding:14px}
+label.fl{display:block;font-size:11px;font-weight:700;color:#D4A630;text-transform:uppercase;letter-spacing:.5px;margin:14px 0 5px}
+label.fl:first-child{margin-top:0}
+input[type="text"],input[type="number"],select,textarea{width:100%;background:#1a1a1a;border:1px solid #444;border-radius:6px;color:#e8e8e8;font-family:inherit;font-size:16px;padding:11px;outline:none;-webkit-appearance:none;appearance:none}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23D4A630' stroke-width='2' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px;background-color:#1a1a1a}
+input:focus,select:focus,textarea:focus{border-color:#D4A630}
+textarea{resize:vertical;min-height:70px}
+.tg{display:flex;gap:8px}
+.tg input[type="radio"]{display:none}
+.tg label{flex:1;padding:13px 10px;background:#1a1a1a;border:2px solid #333;border-radius:8px;color:#aaa;font-weight:600;font-size:14px;text-align:center;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent}
+.tg input[type="radio"]:checked+label{border-color:#D4A630;background:rgba(212,166,48,.12);color:#D4A630}
+.ci{background:#1a1a1a;border:1px solid #333;border-radius:8px;padding:10px;margin-bottom:7px}
+.ci.inc{border-color:#E74C3C;border-width:2px}
+.cn{font-size:14px;font-weight:500;margin-bottom:7px}
+.co{display:flex;gap:5px}
+.co input[type="radio"]{display:none}
+.co label{flex:1;padding:7px 3px;border:1.5px solid #333;border-radius:6px;color:#888;font-size:11px;font-weight:600;text-align:center;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;line-height:1.3}
+.co input[value="good"]:checked+label{background:rgba(46,204,113,.15);border-color:#2ECC71;color:#2ECC71}
+.co input[value="attention"]:checked+label{background:rgba(243,156,18,.15);border-color:#F39C12;color:#F39C12}
+.co input[value="oos"]:checked+label{background:rgba(231,76,60,.15);border-color:#E74C3C;color:#E74C3C}
+.co input[value="na"]:checked+label{background:rgba(136,136,136,.15);border-color:#888;color:#888}
+.cln{margin-top:7px;display:none}
+.cln.show{display:block}
+.cln textarea{font-size:14px;min-height:50px;padding:8px}
+.gg input[type="radio"]{display:none}
+.gg{display:flex;gap:6px;flex-wrap:wrap}
+.gg label{flex:1;min-width:70px;padding:10px 6px;border:2px solid #333;border-radius:8px;font-weight:600;font-size:12px;text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:all .15s;color:#888}
+.gg input:checked+label{border-color:#D4A630;background:rgba(212,166,48,.12);color:#D4A630}
+.pa{border:2px dashed #444;border-radius:8px;padding:18px;text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.pa span{font-size:13px;color:#888}
+.pt{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.pt img{width:56px;height:56px;border-radius:6px;object-fit:cover;border:1px solid #333}
+a.nb{display:block;padding:14px;border-radius:8px;font-weight:700;font-size:15px;text-transform:uppercase;letter-spacing:1px;text-align:center;text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.br{display:flex;gap:10px;margin-top:14px}
+.br a.nb{flex:1}
+.bg{background:#D4A630;color:#1a1a1a}
+.bk{background:#333;color:#e8e8e8}
+.bn{background:#2ECC71;color:#fff}
+.step{display:none}.step.active{display:block}
+.sr{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #333;font-size:14px}
+.sl{color:#888}.sv{font-weight:600}
+.sg{color:#2ECC71}.sy{color:#F39C12}.srd{color:#E74C3C}
+.ab{padding:11px;border-radius:8px;margin-bottom:10px;font-size:13px;font-weight:500}
+.ar{background:rgba(231,76,60,.15);border:1px solid #E74C3C;color:#E74C3C}
+.ay{background:rgba(243,156,18,.15);border:1px solid #F39C12;color:#F39C12}
+.sc{display:none;text-align:center;padding:50px 20px}
+.sc.active{display:block}
+.sc h2{font-size:26px;color:#2ECC71;text-transform:uppercase;margin:12px 0 6px}
+.sc p{color:#888;font-size:14px}
+.sc .rf{color:#D4A630;font-weight:700;font-size:16px;margin-top:10px}
+.ft{text-align:center;font-size:11px;color:#666;padding:16px}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCACNAI0DASIAAhEBAxEB/8QAHAAAAgMBAQEBAAAAAAAAAAAAAAYFBwgEAwIB/8QARhAAAQMDAgQDBAcEBwYHAAAAAQIDBAUGEQAHEhMhMQhBURQiMmEVF0JxgZHRFlaUoSMkUmKCorElMzVywcI0c3SSk7Kz/8QAGwEAAgMBAQEAAAAAAAAAAAAABAUAAwYCAQf/xAA6EQABAwIFAQYFAgMIAwAAAAABAgMRAAQFEiExQVEGEyJhcZEyQoGhsRTBcuHwFRYjJFKCktGisvH/2gAMAwEAAhEDEQA/AMZaNGjUqUaNGjUqUaNGmGyLLue9Kh7FblJfmrSRzHAOFpoeq1n3U/idVuuoZQVuKAA3J0FdJSVGEiTS9o1omH4boFHhNzL+v+m0dKhkttcIx8gtwpz+CdfR2s2Fcww1uwUvduMymSk/5QP56Q/3pw8n/DKljqlCiPcCKL/s94fFA9SKpLb+1qhed3QLbpnCl+W5guKGUtIAypZ+QAJ1oKrR9idqZH7PS6BIu+utJHtZLQeKCR9oKIQg/wB0AkdMnU5tfYVj7SVSffkrcCDUacmMY7KgEe7xEE/ApRWo8OAAPM6Q9rYtsXTQ7uqtRp8arT/pJ6Uv2p8s5aX1Soq+yPi64ODpPdYgnFXlKSpYt0BI8MoKlKPJMGE6aaamjbe2LQCSBnM76wB/3XVcO3lg7n2xLr+0jLlPrcHCpdEdPAVg+QSSQlXfBB4TjHQ6ruBshujLnIifslLj8S0pU6+pCG0Z8yrPYeeM6m7cp1x2q6xcke66bZs18OMoTMe431xVEFBUjhJPyJAOAD000uXruAmGhxe+FuphlR5UhLKS64rplKkBriAHTv66KSrErSWrV1K0cFecqHlKR4gOOfaqy0054nEkHygD2J0qXn2psvtBBiwLviPXXcj7YccZbQVkD1DfEEoT3xxZJ76jpFl7Ubs0mcduGX7euiIyXk02RlCXgPLhJUMHoOJJ6EjIxpRk0Gr1WtN3RU6jTbuamTh9KyIc7lgIwEthwhOWkZ7+7joB076sGNRabRd/7BiWzCEKWoPOzmWnCoIZKDkHqemAv5aBeZctm++/UrL4SpRM+CUiSko4TxtOxmr0oziMgCJAiNdeZ61mCQy7HfcjvtqbdaUULQoYKVA4IP4689N28xiK3Yukwccj6Vf4cds8Z4v550o63Fu73rSXCIkA+4pItOVRHSjRo0aurmjRo0alSjRo0y7YWq/et9Uu3GFKQmU9/TOAf7tpI4lq/BIP441W88hltTrhhKQSfQV0lJWoJG5p52G2gVeaXLluV8021IZKnXlKCDI4eqglR+FI+0vy7Dr2tF2/6vWwqz9kKNGo9BiHlO1lxnhQPUtgjv8AM5Ue/Tvpd8Qt3Icr1N2etKG79DU8tR5MWIrhVJd6cLPF6J6ZPX3iSe2uMVW8q1ORZNlxolDpCIy2zLjoITlo4eU2s9cFZCArucZz3xh1NPYmE3l2BlOqEK+FKeFKHzKI1A2FOmQholtEyNCRuT0B4FM9K2lt2RLcnXPVJt01UK/rDsiSeFKu+CkHI+4n8NT6ttrBW0WjalOCSMEpCgofcc5zrr29t1q1rTh0oYVICebLdzkuvq6rUT59eg+QGmDSq4v7guEJdJA2jT7DQU6ZtWggSgT7/eqU2+2Whx7mqFQr7Jep8eWtFOiOHPOQFe6456jGMDz7np3Tb6uF1ndCqVa02TFeaV9HsNxG/wDxK0J4VrUgDCgPTHknWnkn3gfnrI8MXHR03RIXOm0tVPOHUNK5bi3Xl4SlSh1xjiURny1oMHu3L11xx4zAAA41PT296VX7CbZCUNiJJM86V5t2bUKow1VK3dFIgTqiOc03UZSw88CeilK4SE5/vHTxtZtRGjzKnUNwIqWokAI5SVvBLDoUCeZzAcKTjGMHueul9+5aHctiUCh1J56LMoRIRD5SlpqGfhSlwZKFHoMEY9Dqwbg2ykQ9tWku1OpzXqe37U/TFy1eyqSAVKaQn7JSCeE9ckdR10feXTiUhpa8hUY22E8HTcR6TvpQ1uwhRzpTmgTvz5j+ttqhqHYFCbRMuCzdwm/pCFxur5DBLCU5zwFIyoox0+1n0OpLwxXAw7u3UBUyV1KvxHG4s5wlTsZ5HVbYz5EDI6dkpHrpis1MTb7byLBXX6et+bxyaa6+lTbLhUApLZX6kY69O/QdNVztmKvVN+bYlQn5dRje0Nzg44Ap1plR4V8xQ6nhOUEn0z56W3BN5Z3SXFSnKYUdNteg0kbeoq5aUtKaKRBnUDz+p4qq7nhS6bclTp9QWpcuNLdafWrupaVkKP4kZ1Had9++D65br4OHh+kne3rnr/PSRrV2bpet23D8wB9xSR1OVZT0NGjRo0TXFGjRo1KlGrp8GYe+uVJaZ5ifo1/mK/sD3cH88D8dUtrQ/g1bTAava5nEgJgU1KUqPl8bh/8AzGkPadeTCX/MR9VEAfmjLBM3CPf2qT2+t+kT9470uWnocMOFMciRXHFlalvqJ5ruT5/FjHYKGrOgRIVOjR4URpplDTXKZQMZ4E9cep75PzOdJPh9ilnbGHKc6vT5D0l1XmolZTn8k6/JtSWvxBU+muOJSzHoTim0lWMrcXk4+eEj8tZS7Qt+4W1mMNpj/iI+5/NaO2yssoVGqj+asHSRuVfJtyVAoVIYam3BU3EojsuZ4GgpXCFrx1xnsPkTp3ylIKlnCQMqPoPPWRRcFUuHeNmsQ5K2pUuppRGcTglpBUEJxn0Tr3BcPTdLUtfwoE+p4nyr3ELosJSlO6jWuUhQSkLKSsAcRT2J88fLWfb3rEe09yrnh1ChirmqyIk2Cy4vhaK05IK/NSckjHnjWhF4CiB2z01U+8dIo10SG/o+oNsXZTJKY0SOogGQspDqUEehGSlXbPQ99eYI4lL5Dg8JGvlqCDpxIr3EUKLQKTqKrVdDjR9/qZG9pamNS57U3iR8Hvq5gSPkOg000O/tx525iLWmRI63jMU1Li8IDaWcnjwfQJzhWevzzjSa7TTVKbGnUOQ/Cuqggh6lOIKXilLilhbWfiKArBT3wO2nvbCXWL/EqpRYVMo89opjzau246p9YIJw20TwJV36noD2GtPeBAbK3QFBIyyRseD6Hy12ik9vmz5UEiTOnI6eo86nX4sOobCRWprTb6YI4o7LqsB5TDyglvI6+8lJT064OonwzP0x/caq3JS4siBRqLQXlOtvrC+SpaysoCvNIwvGeuE9dfO6NYpAh0Ww7NQ5VKlAkJLUaOOYlCkoUlPGvsSFK4j8x1I14WylVI8JF0O0NpSaq7U/Za4pR99DfElOB8uFQH+Jek76FGwU2ZHfLCRPAWqJI9NvMxV7qx3wj5Br5kDrVD1SbIqVTlVCW6p2RJeW86tXdSlEkk/idc2jRrcgACBWfJmjRo0a9qUaNGjUqUa0VtUkW54Tr2rrx4FVVxcZk+agQlofzWv8tZ11o/f1K7S2AsixmEkOvtplzAlPQcI4jn0y47/l1nO0B75VtaD53AT/AAo8R/Ao2z8IW50H3OlWJtzA+jLBoUE44m4LZVj+0ocR/mdVjvY2be3Vte95LifYUrbaWlOSsctRKjj04VDVsWdEXAtCjQnPjYgMoV94QM6qfxZEfQtAHn7Q9/8AVGs9has+JFJ1CswPoZrQXoy2c/6YI+1W8HmK3b5ep0lK2Z8RXIeHUYWggH8M/wAtZlsKhM0vfyn0Nt8ym4M8pLpTjjU2kknHl1B127I7pG1FJodc43aKtfE24kcSoqj3IHmk+Y/EfOIqj79M3tM2l1Ft4Sqol9iTGcCkraeXnGR6pVgj7xpzY4c9ZrfYnwqSYPX+Ypfc3bdwlp3kHX+vOtZ6rrczb0ViqKvCjPOtV+EwhcZpOOB5xtQUnPz4QU/PI9NWO6AHFAep1zVCZFp8F+fOfRHix0Fx11ZwEpHc6yNpcO27gW1vt6+X1p880h1GVe39a1VrEe3t4oEyoNR3qDcVMfDaJCDwvtEAFJWBgkcQUPUY6HVe3TXbqth+Ta1ZQ3RXJ7gXUapDQeKa2AQFpAwASM5IwSe+OueuqbzR2btqVaotswm3XGSxGkrylxfXqt4JOF9hhJ7eukSIxdG4938AdcqFTk5UpTiwlKEDufRKR6DW3srNxskvAJaAkAmSk+vQb688Vm7i4QuA2ZWTEjSf5+lXF4VKUGaRWa5yykSH0x2VK78KAVK6/eoflpksuloO4G5W3bmExrkpZnxEeQcIIJHz4l/5dN1nUGLbNswaHEPE3FbwpeMcxZ6qV+JJ0u1VxVP8RW305g8KpbciI7j7SeE4H5r1lry6N27cqSd0kj1R4kn/AMfvTQ2/c27YPBE/XQ/mskvNuMvLZdSUOIUUqSe4I6Ea+NM+7MZuHufc8ZoYQ3VZISPQcxWljX0Zh3vW0uDkA+9ZZacqiOlGjRo1bXNGjRo1KlGtb73SZNfs/bClTm2US67JjOzeWO6EtpJSPPhy4Tj11kjWtNzXUGTsnVgR7KUobz5ZW0zjWU7QAfrbRUaguEeoQSB7j7UzsNUOD+H80/qxk4GB5DWf/FjOYXPoVNQ8C+y06842PshZSEk/fwnV/wCsy7wUWZdm9k+kW3FfmTxHBdRx5yptriVw+gCQBj1+/SXs6lH6vvFmAkEzx0196dYsoi3yjkgV1eHjaSJuPTq/KqkmRDYjIQxDkNYOJB94kg/EAkDI6fEOuvGqbSV+wdybWjVZ+HKizqkgRn46/jCFpKspPVJwR+utUbK2kmydtqVRFIAllv2iYfMvr6qH4dE/4dI/iKHs24O2dRfOIqKi8yonsFr5fDoK17WXN3jTlu2qWVZgB/CkwQfMifrQpw1tu2QtQ8Wk/U0zqOVE+p1UW/30/cdQo+31sxHJcyclUx9ltQSVIRnhBJIASMKUc+g1bhGDg6TLV97xVp4+vLtpRRnyyrr/AKnVdm/+mz3IEltKlAHaQNKY3wzthExmIFLNieF1bsP2i9K2qO+opKYtPwrgGevEtQxkjp0Bx6nXPtXbEG1t772pUYFDNOSGYgcVlQbWtKk9T3OOHWpvPWWN5WzSfFZSJHNU0xUTCecwcJUerYz69U6owHH77Gbh9i5XoUEgAaCCNvpO9CP2jNp3a0DY/mri0iV0c7xDbbMDrwe0ukfckn/t09nvpMpYTL8UlvNEZECiPPn5FXGP+o12yrK28vo2v/1I/ejLz4AOpH5rNO7rhd3UupZ86vKH5OqGlbUndsn2y6qvLJzz5zzmf+ZZP/XUZr6nao7tlCOgA+1Y1wysmjRo0avrijRp32d24q25NyKpkB1EWLHQHJktaeIMoJwAB9pRPYdOx9NXknw57at+5I3Ak8xPRYEiMnr9xzj7tI8Q7RWGHu9y8s5t4AJj1gaUWzZPPJzJGlZW1pu3239yfC/EjUk8y47PkpcYbT1WeXkpAHzbPT1KMalpHhmsBqGmWu8qo1GXjgeccYDas9sKwAdMG0uz37C3c1XrVvj2+kuoUzPjKaSrnjGUgKQrAIVg5xkdfXWXxrtNhl2wlxhwhxs5kylUEjdJMfMJFH2ti+0uFJ0Ig6j3+lV9H8QNvmO2ZlEqiZPB/ShHBw8eBnGTnBOfu1ybDXlSZHiPly4EV4sXE260lclADrDmOZhJBI4SUY+4j01dla2p2ru2pSKi5SYD0xSlGQuDKKcrUCOJSUKxxeY6dx568aHtdtdZ1yQqvD9ngVOGrmtc+eAerfLPuqPY9Vf82fLppQ52gwddq8y20tK1pIjfXjnrGsUeWLtS0qWoEA1ZhOkPfezXr126lQIA/wBqw1pm08joecjPug+qgSPvI05RqjTpLbjsaow322hlxTT6VBA9VEHp+OvD6eoOf+O0v+Mb/XXz6ycubS4S+0k5kEHb8+tNXQ26goUdDWco299Ai2/T3avFmqqi0rbmx2UAKZdbwDxBRGAo9vTr6aTqlvHChbrU2+LeprzwZhGHKjywEcxBJJKSknBwenzHbWiLl262iuGqPVOqwqQqdPypTzc/ll0npxgJWATnzA6kahnthtokzWoRjrbkkg+zmonmODllOOHOep9/I8x6dNfSLftBgYSrvWXAVAgiJEHcb7cTpSh5m9WAkLTAirOtetQbjtyn16mqUYk9hL7XEMKAPcH5g5B+7Vc797Wm9Iz1w0xxwV+nwAinoSccS0O8z8yOJI+ZGn+iQaFZ1uU+iR5LEGBEbDMf2l8JKsdT1URkkkk/frtiVakyn0sxarAkPHs21JQpR+4A51gLW7esLw3VkDlBMSPlnY/TemjjaXmu7d3/AHrOUXeu3Y9vU+TV2pYqbnG1NisoHGy6gDJIJGAo9vx9NKdL3hpMHfWLeEaI6ulPQm6fJD6eFxpskFa0gE5II/EZ9dX5d+3G0Ver0qo12LS01N4/1hSajyFFX9pSQsDi+ePv1C0/YTZ+Yr+pIdmcrgKw1U+Z2BHvcPbi7nt1HTAyNb1nHsD7pRdacGYEHTSD0M+xpW6zerISFJMH8VnfxFWNHsy9w/SXEO0OstmbTloOQEqPvIB8wCRg+hTqs9bcvbaC1r0otvW3+0zzS7ajqjI5LjbjqkYSk8xPkRwDrpTmeGrbyEtLc29alFcUMhLz0dBI9QCO2neF9s7BFshu5WS4JHwqkgHQ7ciCfOl9xhbxWVIAy+orJ+jWma14aKHLpkpVm3oJ9RaRxtx3lNLSv0SVIOU57AkYzrNcph6LKdiyG1NPMrLbiFDBSoHBB+460+G4xZ4mFG2VJTuCCCJ20NL37ZxiM43rSezbi7U8Kt3XRCVyp8x11CHU/EnAQ0nB+RWoj79VtZOx97XdbUW4qeqlswZalcoypXAtQSopJxg9Mg/lqxdsx9O+Dy7KUwCt+C884UjvhPLe/wBAr8tI91yqjcHh6tWRTltJgW08/FqSQ8A4l51zLR4e5BR5/frN2jlwi4uAyoJWp7KSRMJyeHSRuYA15o9xKChGYSAmY851ph39p9Vr+41r7TW4UutUqmsRo7XHwtl0t8SnFeWAgDr5AH11+7ORbq2h30p1p15xCI9ZbDbqGXeNlwLB5bg/vBacds9x56/Nt5LFvb/WS/UlhDU+34bbbiz0CnIgQk5PqoY/HTN4iZzEjxEWHAhKCp0NcfnhPdJU/wASQfnjr+I0MXXAUYSUhTSmlKKo+bWT5a6+pqwIGtxMKCgI8q6/BYMm93f7U1gdv/O/XSl4naBPuvxDU63qWWRNmU5hprmr4UZ/pFdT1x004eCYcVMu90D4p7Pn8l/rrwvTC/GrbYJACIzRJPlhl06Wh1bHaW8eTulskfRCavKQuxbSeVfuaq+0KbXdt9wbitSsKbQ9Kt6czISy5xtrSYqnUEHzwUjy9dRe3+zd3XxbortGdpSIheWyPaZXLUVJxnpg9Oo033RU4t6b53rW6c4HoNOoU7luo+FaW4pZ4gfQqV0+8ajNnttLwvlq3JxYb/ZSJOUl1z2lKSE8YU77meIk9B29NahV6tq2Ny4tLThSgqJEiYJgCRrwBNABpKl5EgqEmPcVG+IShrtG4bYoHG37RTreipdW2ehd5jqlkfLiJ1Y8WqouHxW2TWUK4hMo8eQSPUxHCf551G+JWjKuPxCxqK0MLdoo5QA+0lt5aR+YGlTw1TZFR3xtYSFcXskd1hs+iEsu4H+bQelzgwuVnxhlZP8AvE/lNWfBdZBsVD7f/atTxw5VblrtDuqa9j/2J1T9bsS79n7htu4qq7CSpU1K2FRJPGcoKSoKGBgEHH4nVv8AjbUv6PtBDYBWZj5SD2Jw3jOqf3Osq77LuGm1u+zFlpqM5T5aZl8wrwtKnBj7IPFjQ/ZNcYVbMlYAX3kpO6tToNREc713iI/zC1QdI16VJXhZFZ3D38vOnUBcNLzMt6QoyneWngCwnvg9feGr18O9gVDay1riqNwuQVyniHiYz3MSGWUKV1VgdclXTVGVy3rsvXd+/qVZ8dLypEpx2Slb6WjyQ8CBlRA+Lh6fLV43hAO23hVl0hxQTMTThGeKVZ4n31gOYPn8avwGg+0Dzjltb4elwQ53aSiPEBoZJnQTGkfWrbNCUrW8Unw5jPFUJ4eLilw99qXVZKlJRWpL0Z9auyy7npnz98oP5advFnRplyb1WzQKeWhLmwGmGi6rhSFKdcxk9cDSvVqC7b+w+396sslMlmtPSFKA68KlAoz/APB/PU94o5s+XvLQJlvtrelu0Rp6KlsZUeIuqyPng500UEv4y3dMwPC6jyBQYE+/tQ4JTaqbV1Sfeo/a2g3DtP4g7do9XkRCupo5Tnsr3MQtt3iSATgdQtIPbyGlbxNUhqj71V5phAS1JcRLAA7FxAUr/MVaZvChYj10XqzdUipR/ZqFIStUYrKn3HMEt9PJGeuc/ZI0neIS42Lo3drlRiEmK26IrJIxxJaSEZ/Egn8dF2ilKx4jNmUlqFkCBOaU6a6xPJ0qtwAWm0Aq09I1pr8KF9QLauuZbldcbRSK8gMqU6cNoeGQni9EqClJJ+Y12bh+HW9qbXZSLRjpqtGfcK2UiShtxtOchK0rIBIzgEZz36aonWhfCfuDdsu/YVo1CtSJlIXGeKGH8LLZQgqTwqPvAdO2cfLUxm2usPW7idiofDK0qBhWUaERsQNOhry1cbeCWHQd9COJ/amvd3ZWvXLY1pTKMw0LgpFKZhS4q3UpLiUpBwlfw8SVcXngg9+moPYjZO86ffzVzXjB9lap6FusIckIdXIfKSEfCTgDOck+Q12xa/Rnty78iXpfl1UtiHU1IpzMGY+lCUcS+IYQlQGMJxnGp2lsVG692r/pk66rljwqHFYMBuFUFMAf0fdQHcnGT8ydZo3eJMWa7ZbgCCnMVZFaBZTokzB+OPKmHdsLdDgBmYiRxO/tVLM7H7xxysR7dkshRyoN1BlIP34c017p7MbiTK7TDQaM7NYiUaJFXIEtpJU6lvDnxLB+Iq1L7YXddFTq+0yZ1eqL6ZsioNSwt9REhLajwcfX3sZ89OHiFrdZpcW8V02rTYao1IpbrBYfUjlrXLdStScHoSkAH1A0a9i+LJxFtg93JB+VUarCNfFPE+lVItrcsqUJj6dJ6VEbZbL1+2NrrxVOjtO3LW6Y5EjRG3UkNII+Er+HiUrGeuBwjrqpWNkd5WG+Wxb8tpA68KKgyB+Qc1a1OnN1jd6sUu577q9GpseiQZEcN1kxEl5TDJV3OCTxKJHrk6S3rqvyVtlRaxCuaqrfpjlQkLX7QrMlhp6MkBZ+2E8xXfyyNd2FzigdWrOglwpJzJVAlBKQPFrATB9Zrx1u3KQIMJnYjg6z70827tddtL3nsiruU5cik0mlsMTZhfQrDvJc5gwVcR99eO2ozaHaK8bV33FZlUYt0GO/L5MoPtkFtSVhs8IVxdcjy1Lbz3rVqjWrPnW5WJcKll6nmSmM6UB5cvLgQrHcJbb7f39RNsV6izbxvKNel/3ZTnY1ddYp7MKZICA3zFDGEJUBg4AzjS9K8Uds1OOEeNvKUhKlKAkiYB38U9AOKuy26XABOhkGQBt/KmrxXWLdl6xrdRa9KVPMNchT+HkN8HEG+H41DOcHt6apil7D7r1GswmqtSHGI3OSHJEic2tLSM+8cBZPbyA66tOBdVw2rvoZlYq8uTalZrEqjpaedKm4jqFI4CAeieqk9sdCr0187nLq7Oy9Uu+Pc1wRanT6tJishietDZR7etHvJHxEJOB16ADXuGXeIYayzYtqRkVASrKomVlWnxDVJ0P0qPtsvqW6oGRuJHEfmq/v/ZzdOZuBXqpRaBI9klTnVsOonNIK2yslJ+MHtjodSP1R7oI2gk0Y0h+RVajWW3n2FTW1cuOy0oIOSvHvLcPQHPujWk9uqSKTa8QfSlVqKpbTclblQlF9aVKbTkJUeoTnrjVX2rCqF8btbhQqrdNyxItIltNQ2afUVR0NpPGCMDp9kfz0Mz2pu3g4klAQxlM5VSYIA0zddd+K7Vh7aYOsrnSR69KqWh7D7lSqLWGaxTJLJYhhVNjqnNqS6/zEe6AFkD3OPvgafaNt/f7u523FfqdBW1HotMjRag6qQ0eWppTo7BWT7pQeme+pSlxqndW6O41OqF13LGjUBppMBuFUVMpThtQyoDoSeEE+pJ182zfNzQ/CW7dpqbkitR1rbalSAHFY9pCBni+LCSR10VeYniT4CQUFSilMZVDL3qNIMmdNTpvVTTDCOsCTxrlNfbO3t2WFvuLnsikmdbNU/wCIRm322+SlavfSEqUM8KsLTj7tJPiW2erSr8Nds+jPzolWCnpDUdGeS+COM48grIUPnxaUh4it0wnh+l4Z+ZgNZ/01xzN+905JTm5A1w56NxGR3/w6ZWWEY9b3SLhSmyUpynVXiHGbTcdaodubNaCgBUEzxp6VWGrm8HMFcreRqSDhMOBIeV88gI/79UzrtotWqdFnon0ioSoEtAIS9HdLawD3GR11r8TtFXlm7bpMFaSJ9aWsOBp1KyNjWzaJaG5VrXrd1at9u1pUa4J3tKUzpDyVtpBUUjCE4z73X7tRdy2NuZRbuui7rSepEo1hLDr8UrWl1fLRhbKQRwkKJVjJB7djrNP1pbj4x+3FwY/9e5+uj60tx/34uD+Pc/XWQR2ZxJLneFxskgJMoPiAiJ14yimZv2CIyq677b/91ouh7O3hb9OsWbSZ1Fk1W3XJTrzEpTiGVl45ACkjPQdD0HXUxeu3t+Xlb1yiruW9EqlUjQokdqI66WUtsPKdUpSlJzk8eAAPLWXfrS3H/fi4P49z9dfn1pbj/vxcH8e5+uvVdncXU4HS83mBkHKZ+LPG+2avBfWwTlCTHr5R+K1nbG1q2Ny6pcdww6NUqfJpUWIwy62HlIdaaaQpWFJwAeBWCOuDpiuOyWKpVYrTEaFFoyaLPprrDaAjBkcvBSkDGBwEn541iv60tx/34uD+Oc/XR9aW4/78XB/HOfroNzshirjqXTcpkDKNDA0iYneOatTiduElOQ6mf3rSEPZe4Yu3FuUAT6e9UoNwN1Sa8t1fAppscCEIPDk4SEgAgDvqWtK0NzrPrt0SqI3akuLXKq5OHtkh8LbBUogYSnHZXXWWfrS3H/fi4P45z9dH1pbj/vxcH8c5+ui3OzmLOpUh15tQUSSCk8mevB2qtN9bJIKUkR51re7tspNybf3LQZT0VufOrL1Vpz6VHhZWrh4eI4yMgKBxnodR9S2zuioeH12xJM+A7XX5PPdkqcVylEyOaTnhzkj5d9ZY+tLcf9+Lg/jnP10fWluP+/Fwfx7n66pR2WxZCUpFwiErCx4ToofXbqK6OIWxk5DqI34rfNMbFMoUNmY6037JFbbdcK8IBSkAnJ8sjz1WkKzdwrY3Buy4LX/ZqbFuB9t/hqLryFtcIV0whOD1UfP01kStX7etbp7lOq911mdDcIK2H5i1IVjtkE4OvWBuLfsCE3Ch3jXWI7YwhtE5wJSPQddD2vYe7tkuQ8k59FApJBEgjmZkV25izSyJSRG2utavTY+4VFvi7K/b6rZlM3K22HkTXXkKYUEEK4QlJyMqVjJ7Y0mbpUr6s/C0zZNVqEV+qzZYCEsk4UC9zVFIOCUpAAJx3I1Rf1pbj/vxcH8e5+ulytViq1qYZlYqUuoSSMc2S8pxWPTJPbTW07NXgebVcupKUlJ8KYJKBCZM8elDO3zRSQ2kyZGp2neuHRo0a21Kq//Z" alt="GBE">
+  <div><h1>Daily Equipment Inspection</h1><p>Golden Bear Equipment Co.</p></div>
+</div>
+<div class="ctr" id="fw">
+
+<!-- STEP 1 -->
+<div class="step active" id="step1">
+<div class="cd"><div class="ch"><div class="hx">1</div>Operator & Equipment</div><div class="cb">
+  <label class="fl">Operator Name</label>
+  <input type="text" id="fName" placeholder="Enter your full name" autocomplete="name">
+  <label class="fl">Inspection Type</label>
+  <div class="tg">
+    <input type="radio" name="itype" id="tD" value="daily"><label for="tD">Daily Pre-Use</label>
+    <input type="radio" name="itype" id="tT" value="transfer"><label for="tT">Transfer / Receiving</label>
+  </div>
+  <div id="xw" style="display:none">
+    <label class="fl">Received From (Job or Yard)</label>
+    <input type="text" id="fXfer" placeholder="e.g. Job 26075 or Riverside Yard">
+  </div>
+  <label class="fl">Equipment Type</label>
+  <select id="fCat">
+<option value="">Select type</option>
+          <option value="ARROW">Arrow Board (Tow-Behind)</option>
+          <option value="AP">Asphalt Paver / Milling Machine</option>
+          <option value="BH">Backhoe</option>
+          <option value="CT">Crane Truck</option>
+          <option value="DZ">Dozer / Scraper / Pipelayer</option>
+          <option value="DUMP_TR">Dump Trailer</option>
+          <option value="DT">Dump Truck / Heavy Truck</option>
+          <option value="EX">Excavator</option>
+          <option value="FL_RL">Forklift / Reach Lift</option>
+          <option value="LIGHT">Light Tower (Tow-Behind)</option>
+          <option value="LD">Loader (Rubber Tire)</option>
+          <option value="ST">Lowbed Truck</option>
+          <option value="ML">Manlift / Scissor Lift</option>
+          <option value="PCMB">Message Board / PCMB (Tow-Behind)</option>
+          <option value="MG">Motor Grader</option>
+          <option value="AR">Roller / Compactor</option>
+          <option value="SATC">SATC Truck</option>
+          <option value="SS">Skid Steer</option>
+          <option value="SL">Skip Loader</option>
+          <option value="VT">Vac Truck / Hydroex</option>
+          <option value="VEH">Vehicle (Pickup / Utility / Auto) (Weekly)</option>
+          <option value="WT">Water Truck</option>
+  </select>
+  <div id="ow" style="display:none">
+    <label class="fl">Describe Equipment</label>
+    <input type="text" id="fOther" placeholder="e.g. 2018 Ditch Witch Vacuum Excavator">
+  </div>
+  <label class="fl">Unit</label>
+  <select id="fUnit"><option value="">Select equipment type first</option></select>
+  <label class="fl">Job Number</label>
+  <input type="text" id="fJob" placeholder="e.g. 26075">
+  <label class="fl">Job Site / Location</label>
+  <input type="text" id="fSite" placeholder="e.g. BNSF Barstow or Riverside Yard">
+  <div class="br"><a class="nb bg" href="#step2">Next</a></div>
+</div></div>
+</div>
+
+<!-- STEP 2 -->
+<div class="step" id="step2">
+<div class="cd"><div class="ch"><div class="hx">2</div>Mileage / Hours</div><div class="cb">
+  <div id="mw">
+    <label class="fl">Odometer Reading</label>
+    <input type="number" id="fOdo" inputmode="numeric" placeholder="Current mileage">
+  </div>
+  <div id="hw">
+    <label class="fl">Hourmeter Reading</label>
+    <input type="number" id="fHr" inputmode="decimal" step="0.1" placeholder="Current hours">
+  </div>
+  <label class="fl">Fuel Level</label>
+  <select id="fFuel">
+    <option value="">Select fuel level</option>
+    <option>Full</option><option>3/4</option><option>1/2</option><option>1/4</option><option>Empty / Near Empty</option>
+  </select>
+  <label class="fl">Last Greased</label>
+  <div class="gg">
+    <input type="radio" name="grease" id="g1" value="today"><label for="g1">Today</label>
+    <input type="radio" name="grease" id="g2" value="yesterday"><label for="g2">Yesterday</label>
+    <input type="radio" name="grease" id="g3" value="this_week"><label for="g3">This Week</label>
+    <input type="radio" name="grease" id="g4" value="over_week"><label for="g4">Over a Week</label>
+  </div>
+  <div class="br">
+    <a class="nb bk" href="#step1">Back</a>
+    <a class="nb bg" href="#step3">Next</a>
+  </div>
+</div></div>
+</div>
+
+<!-- STEP 3 -->
+<div class="step" id="step3">
+<div class="cd"><div class="ch"><div class="hx">3</div>Inspection Checklist</div><div class="cb">
+  <div id="clL"></div>
+  <div class="br">
+    <a class="nb bk" href="#step2">Back</a>
+    <a class="nb bg" href="#step4">Next</a>
+  </div>
+</div></div>
+</div>
+
+<!-- STEP 4 -->
+<div class="step" id="step4">
+<div class="cd"><div class="ch"><div class="hx">4</div>Photos & Notes</div><div class="cb">
+  <label class="fl">Photos</label>
+  <label class="pa" for="fPh"><div style="font-size:28px">📷</div><span>Tap to take photo or choose from gallery</span></label>
+  <input type="file" id="fPh" accept="image/*" capture="environment" multiple style="display:none">
+  <div class="pt" id="pTh"></div>
+  <label class="fl">Additional Notes</label>
+  <textarea id="fNotes" placeholder="Any observations, damage, or comments..."></textarea>
+  <div id="dw" style="display:none">
+    <label class="fl">Damage Noted on Arrival (Transfer Only)</label>
+    <textarea id="fDmg" placeholder="Describe any damage observed..."></textarea>
+  </div>
+  <div class="br">
+    <a class="nb bk" href="#step3">Back</a>
+    <a class="nb bg" href="#step5">Next</a>
+  </div>
+</div></div>
+</div>
+
+<!-- STEP 5 -->
+<div class="step" id="step5">
+<div class="cd"><div class="ch"><div class="hx">5</div>Review & Submit</div><div class="cb">
+  <div id="sum"></div>
+  <div id="alr" style="margin-top:12px"></div>
+  <div class="br">
+    <a class="nb bk" href="#step4">Back</a>
+    <a class="nb bn" href="#submit">Submit Inspection</a>
+  </div>
+</div></div>
+</div>
+
+</div>
+<div class="sc" id="ss">
+  <div style="font-size:60px">✅</div>
+  <h2>Inspection Submitted</h2>
+  <p>Your inspection has been recorded.</p>
+  <div class="rf" id="rId"></div>
+  <p id="aMsg" style="margin-top:14px"></p>
+  <div class="br" style="max-width:280px;margin:24px auto 0"><a class="nb bg" href="#reset">New Inspection</a></div>
+</div>
+<div class="ft" id="fTs"></div>
+
+<script>
+(function(){
+var UNITS = {"AP": [{"v": "AP01-657", "l": "AP01 | 657 | 2008 Caterpillar AP655D"}, {"v": "AP02-6072", "l": "AP02 | 6072 | 2019 Leeboy 8500D"}, {"v": "AP03-6066", "l": "AP03 | 6066 | R&D"}, {"v": "MM02-6006", "l": "MM02 | 6006 | 2007 Caterpillar PM200"}, {"v": "PV01-682", "l": "PV01 | 682 | 2004 Caterpillar RM250"}], "AR": [{"v": "AR01-658", "l": "AR01 | 658 | 2005 Caterpillar CB-534D"}, {"v": "AR02-655", "l": "AR02 | 655 | 2006 Caterpillar CB224E"}, {"v": "AR03-673", "l": "AR03 | 673 | 2006 Caterpillar CB-434D"}, {"v": "AR04-6014", "l": "AR04 | 6014 | 2006 CAT CB113"}, {"v": "AR05-6027", "l": "AR05 | 6027 | 2014 CAT CB-434D"}, {"v": "AR06-6121", "l": "AR06 | 6121 | 2017 Wacker RD12A"}, {"v": "AR07-6123", "l": "AR07 | 6123 | 2018 Wacker RD12A"}, {"v": "AR08-6074", "l": "AR08 | 6074 | 2020 CAT CB1.7"}, {"v": "AR09-6109", "l": "AR09 | 6109 | 2022 Hamm"}, {"v": "DC01-619", "l": "DC01 | 619 | 1998 Caterpillar 323C"}, {"v": "DC02-639", "l": "DC02 | 639 | 2000 Caterpillar CS563D"}, {"v": "DC03-638", "l": "DC03 | 638 | 2001 Caterpillar CP-563D"}, {"v": "DC04-622", "l": "DC04 | 622 | 2004 Dynapak CA250D"}, {"v": "-5270", "l": "--- | 5270 | Kohler AG2-SK1408M1"}, {"v": "-537", "l": "--- | 537 | 1999 Rammer RT820"}], "ARROW": [{"v": "-5727", "l": "--- | 5727 | 2023 Wanco"}, {"v": "-5728", "l": "--- | 5728 | 2023 Wanco"}, {"v": "-5786", "l": "--- | 5786 | 2024 Wanco"}, {"v": "-5787", "l": "--- | 5787 | 2024 Wanco"}, {"v": "-5821", "l": "--- | 5821 | Solar Tech Silent Sent Eco"}, {"v": "-5822", "l": "--- | 5822 | Solar Tech Silent Sent Eco"}, {"v": "-5823", "l": "--- | 5823 | Solar Tech Silent Sent Eco"}, {"v": "-5824", "l": "--- | 5824 | Solar Tech Silent Sent Eco"}, {"v": "-5854", "l": "--- | 5854 | 2020 SolarTech Silent Sent Eco"}, {"v": "-5855", "l": "--- | 5855 | 2020 SolarTech Silent Sent Eco"}], "BH": [{"v": "BH01-618", "l": "BH01 | 618 | 2004 Caterpillar 430D"}, {"v": "BH02-645", "l": "BH02 | 645 | 2005 Caterpillar 420D"}, {"v": "BH03-660", "l": "BH03 | 660 | 2003 Caterpillar 420D"}, {"v": "BH04-676", "l": "BH04 | 676 | 2009 Caterpillar 430E RLN"}, {"v": "BH05-6015", "l": "BH05 | 6015 | 2013 CAT 430F"}, {"v": "BH06-6025", "l": "BH06 | 6025 | 2015 CAT 420 F"}, {"v": "BH07-6026", "l": "BH07 | 6026 | 2015 CAT 430 F"}, {"v": "BH08-6028", "l": "BH08 | 6028 | CAT 430 F"}, {"v": "BH09-6029", "l": "BH09 | 6029 | CAT 430 F"}, {"v": "BH10-6111", "l": "BH10 | 6111 | 2022 JCB 1CXTHF4EC"}, {"v": "BH11-6112", "l": "BH11 | 6112 | 2020 CAT 420.0"}, {"v": "BH12-6116", "l": "BH12 | 6116 | 2022 CAT 420.0"}, {"v": "BH13-688", "l": "BH13 | 688 | 2008 CAT 420E"}, {"v": "BH14-6126", "l": "BH14 | 6126 | 2007 KAMATSU WB156-5"}, {"v": "BH15-6127", "l": "BH15 | 6127 | 2007 KAMATSU WB156-5"}, {"v": "BH16-6138", "l": "BH16 | 6138 | 2023 CAT 416.0"}, {"v": "BH17-6152", "l": "BH17 | 6152 | 2023 CAT 416.0"}, {"v": "BH18-6153", "l": "BH18 | 6153 | 2023 CAT 416.0"}, {"v": "BH19-6156", "l": "BH19 | 6156 | 2023 CAT 416.0"}, {"v": "BH20-6157", "l": "BH20 | 6157 | 2023 CAT 416.0"}, {"v": "BH21-6160", "l": "BH21 | 6160 | 2024 CAT 416.0"}, {"v": "-5826", "l": "--- | 5826 | CAT 36\" Bucket"}], "CT": [{"v": "CT01-459", "l": "CT01 | 459 | 2018 Freightliner 1970C"}, {"v": "CT02-464", "l": "CT02 | 464 | 2021 Peterbilt 337.0"}, {"v": "-6080", "l": "--- | 6080 | 1980 CAT 235 45 T"}], "DT": [{"v": "AD01-620", "l": "AD01 | 620 | 1996 Volvo A35"}, {"v": "AD02-669", "l": "AD02 | 669 | 1996 Volvo A35C"}, {"v": "AD03-6011", "l": "AD03 | 6011 | 2005 Volvo A35D"}, {"v": "AD04-6012", "l": "AD04 | 6012 | 2005 Volvo A35D"}, {"v": "DT01-407", "l": "DT01 | 407 | 1989 Kenworth"}, {"v": "DT02-436", "l": "DT02 | 436 | 1978 Mack T/A"}, {"v": "DT03-452", "l": "DT03 | 452 | 2018 Peterbilt 348.0"}, {"v": "DT04-454", "l": "DT04 | 454 | 2006 Ford F750"}, {"v": "DT05-455", "l": "DT05 | 455 | 2006 Ford F750"}, {"v": "DT06-456", "l": "DT06 | 456 | 2010 Ford F650"}, {"v": "DT07-457", "l": "DT07 | 457 | 2019 Ford F650"}, {"v": "DT09-467", "l": "DT09 | 467 | 2023 Ford F550"}, {"v": "DT10-468", "l": "DT10 | 468 | 2023 Ford F650"}, {"v": "DT11-474", "l": "DT11 | 474 | 2023 Kenworth T480"}, {"v": "DT12-463", "l": "DT12 | 463 | 2021 Ford F550"}, {"v": "DT12-714", "l": "DT12 | 714 | 2017 Peterbilt 567.0"}, {"v": "FT01-406", "l": "FT01 | 406 | 1979 Kenworth"}, {"v": "FT02-408", "l": "FT02 | 408 | 1989 Kenworth"}, {"v": "FT03-453", "l": "FT03 | 453 | 1997 Chevrolet T6500"}, {"v": "FT04-490", "l": "FT04 | 490 | 2016 Kenworth T880"}, {"v": "MT01-410", "l": "MT01 | 410 | 2005 Kenworth T300"}, {"v": "XX01-477", "l": "XX01 | 477 | 2023 Chevrolet 6500.0"}, {"v": "XX02-478", "l": "XX02 | 478 | 2019 Dodge 5500.0"}, {"v": "-621", "l": "--- | 621 | 1996 Volvo A35"}], "DUMP_TR": [{"v": "TR36-5644", "l": "TR36 | 5644 | 2024 Southland SL716-20K"}, {"v": "TR39-5645", "l": "TR39 | 5645 | 2024 7730.0 SL716-20K"}, {"v": "TR40-5646", "l": "TR40 | 5646 | 2024 Southland SL610-7K"}, {"v": "TR41-5647", "l": "TR41 | 5647 | 2024 Southland SL610-7K"}, {"v": "TR42-5648", "l": "TR42 | 5648 | 2024 Industrias America FT510"}, {"v": "TR43-5649", "l": "TR43 | 5649 | 2024 Southland SL510-5K"}, {"v": "TR44-5650", "l": "TR44 | 5650 | 2024 Southland SL510-5K"}, {"v": "TR45-5651", "l": "TR45 | 5651 | 2024 Southland SL510-5K"}, {"v": "TR46-5652", "l": "TR46 | 5652 | 2024 Southland SL510-5K"}, {"v": "TR47-5653", "l": "TR47 | 5653 | 2024 Southland SL510-5K"}], "DZ": [{"v": "DZ01-602", "l": "DZ01 | 602 | 1994 Caterpillar D6HXR"}, {"v": "DZ02-603", "l": "DZ02 | 603 | 1999 Caterpillar D5M"}, {"v": "DZ03-637", "l": "DZ03 | 637 | 1998 Caterpillar D8R"}, {"v": "DZ04-6093", "l": "DZ04 | 6093 | 1997 CAT D6R"}, {"v": "DZ05-6146", "l": "DZ05 | 6146 | 1997 CAT D6M XL"}, {"v": "SB01-6086", "l": "SB01 | 6086 | CAT D4E"}, {"v": "SB03-6088", "l": "SB03 | 6088 | CAT D4E"}, {"v": "SB04-6089", "l": "SB04 | 6089 | CAT D3"}, {"v": "SB05-6090", "l": "SB05 | 6090 | CAT D3"}, {"v": "SB06-6091", "l": "SB06 | 6091 | CAT D5"}, {"v": "SB07-6094", "l": "SB07 | 6094 | CAT D6"}, {"v": "SB08-6098", "l": "SB08 | 6098 | CAT 572G"}, {"v": "SB09-6099", "l": "SB09 | 6099 | 1990 CAT D5B"}, {"v": "SB10-6100", "l": "SB10 | 6100 | 1969 CAT 571A"}, {"v": "SB11-6101", "l": "SB11 | 6101 | 1964 CAT 583H"}, {"v": "SB12-6102", "l": "SB12 | 6102 | 1966 CAT 572E"}, {"v": "SB13-6103", "l": "SB13 | 6103 | 1978 CAT D8"}, {"v": "SB14-6104", "l": "SB14 | 6104 | 1978 CAT D8"}, {"v": "SB15-6105", "l": "SB15 | 6105 | 1978 CAT D8"}, {"v": "SB16-6106", "l": "SB16 | 6106 | 1985 CAT D7G"}, {"v": "SBO2-6087", "l": "SBO2 | 6087 | CAT D4E"}, {"v": "SC01-605", "l": "SC01 | 605 | 1978 Caterpillar 623B"}, {"v": "SC02-670", "l": "SC02 | 670 | 2004 Caterpillar 613C"}, {"v": "SC03-6017", "l": "SC03 | 6017 | 2006 CAT 613C11"}, {"v": "-601", "l": "--- | 601 | 1978 Caterpillar D7G"}], "EX": [{"v": "EX01-636", "l": "EX01 | 636 | 2002 Caterpillar 321 BLCR"}, {"v": "EX02-647", "l": "EX02 | 647 | 2006 Linkbelt 225.0"}, {"v": "EX03-675", "l": "EX03 | 675 | 2008 Caterpillar 305CCR"}, {"v": "EX04-690", "l": "EX04 | 690 | 2008 CAT 304C"}, {"v": "EX05-6010", "l": "EX05 | 6010 | 2004 Caterpillar 385BL"}, {"v": "EX06-6030", "l": "EX06 | 6030 | 2012 CAT 320 E"}, {"v": "EX07-6034", "l": "EX07 | 6034 | 2017 CAT 304 E2"}, {"v": "EX08-6038", "l": "EX08 | 6038 | 2013 Volvo ECR28"}, {"v": "EX09-6047", "l": "EX09 | 6047 | 2014 John Deere 35G"}, {"v": "EX10-6048", "l": "EX10 | 6048 | 2015 John Deere 35G"}, {"v": "EX11-6049", "l": "EX11 | 6049 | 2017 CAT 313FL GC"}, {"v": "EX12-6053", "l": "EX12 | 6053 | 2014 CAT 308E2 CR"}, {"v": "EX13-6068", "l": "EX13 | 6068 | 2020 CAT 303.5E"}, {"v": "EX14-6076", "l": "EX14 | 6076 | 2021 CAT 303E CR"}, {"v": "EX15-6085", "l": "EX15 | 6085 | CAT 325BL"}, {"v": "EX16-6092", "l": "EX16 | 6092 | CAT 325CL"}, {"v": "EX17-6113", "l": "EX17 | 6113 | 2022 CAT 304.0"}, {"v": "EX18-6114", "l": "EX18 | 6114 | 2023 CAT 304.0"}, {"v": "EX19-6117", "l": "EX19 | 6117 | 2023 CAT 305-07CR"}, {"v": "EX20-6064", "l": "EX20 | 6064 | 2017 CAT 308E2 CR"}, {"v": "EX20-6124", "l": "EX20 | 6124 | 2023 CAT 301.7"}, {"v": "EX21-6132", "l": "EX21 | 6132 | 2023 CAT 304.7"}, {"v": "EX22-6125", "l": "EX22 | 6125 | 2023 CAT 301.7"}, {"v": "EX24-6133", "l": "EX24 | 6133 | 2023 CAT 303.5"}, {"v": "EX25-6134", "l": "EX25 | 6134 | 2023 CAT 301.7"}, {"v": "EX26-6135", "l": "EX26 | 6135 | 2023 CAT 301.7"}, {"v": "EX27-6136", "l": "EX27 | 6136 | 2023 CAT 301.7"}, {"v": "EX28-6139", "l": "EX28 | 6139 | 2023 CAT 301.7"}, {"v": "EX29-6140", "l": "EX29 | 6140 | 2023 CAT 301.7"}, {"v": "EX30-6141", "l": "EX30 | 6141 | 2023 CAT 301.7"}, {"v": "EX31-6142", "l": "EX31 | 6142 | 2023 CAT 308.07CR"}, {"v": "EX32-6147", "l": "EX32 | 6147 | 2013 CAT 305.5E"}, {"v": "EX33-6148", "l": "EX33 | 6148 | 2023 CAT 301.7CR"}, {"v": "EX34-6149", "l": "EX34 | 6149 | 2023 CAT 301.7CR"}, {"v": "EX35-6150", "l": "EX35 | 6150 | 2023 CAT 301.7CR"}, {"v": "EX36-6151", "l": "EX36 | 6151 | 2023 CAT 301.7CR"}, {"v": "EX37-6155", "l": "EX37 | 6155 | 2023 CAT 315-07 GC"}, {"v": "EX38-6161", "l": "EX38 | 6161 | 2024 CAT 301.7-CR"}, {"v": "EX39-6162", "l": "EX39 | 6162 | 2024 CAT 301.7-CR"}, {"v": "EX40-6164", "l": "EX40 | 6164 | 2024 CAT 301.7CR"}, {"v": "EX41-6165", "l": "EX41 | 6165 | 2024 CAT 301.7CR"}, {"v": "EX42-6166", "l": "EX42 | 6166 | 2024 CAT 309.0"}], "FL_RL": [{"v": "FL01-610", "l": "FL01 | 610 | 1975 Caterpillar V-180"}, {"v": "FL02-680", "l": "FL02 | 680 | 1993 Caterpillar R80"}, {"v": "FL03-695", "l": "FL03 | 695 | 2001 CAT CP20"}, {"v": "FL04-6071", "l": "FL04 | 6071 | 2014 Hyster 550CT"}, {"v": "FL05-6073", "l": "FL05 | 6073 | 2014 Toyota 8FG45U"}, {"v": "FL06-6095", "l": "FL06 | 6095 | CAT V150"}, {"v": "FL07-6096", "l": "FL07 | 6096 | KALMAR P60"}, {"v": "FL08-6097", "l": "FL08 | 6097 | Daewoo G25S"}, {"v": "RL01-653", "l": "RL01 | 653 | 1998 Gradall 534D9"}, {"v": "RL02-649", "l": "RL02 | 649 | 1999 Gradall 534D9"}, {"v": "RL03-678", "l": "RL03 | 678 | 1999 Gradall 534D10"}, {"v": "RL04-6070", "l": "RL04 | 6070 | 2012 CAT TL12550"}, {"v": "RL05-6082", "l": "RL05 | 6082 | 2014 CAT TL1055C"}, {"v": "RL06-6107", "l": "RL06 | 6107 | 2014 CAT TL1255C"}, {"v": "RL07-6077", "l": "RL07 | 6077 | 2015 CAT TL1055D"}, {"v": "RL08-6079", "l": "RL08 | 6079 | 2013 CAT TL 1255C"}, {"v": "RL09-6110", "l": "RL09 | 6110 | 2015 Skyjack VR1056E"}, {"v": "RL10-6144", "l": "RL10 | 6144 | 2023 Genie GTH-5519"}, {"v": "RL11-6145", "l": "RL11 | 6145 | 2023 Genie GTH-5519"}, {"v": "-6129", "l": "--- | 6129 | Gradall"}, {"v": "-6130", "l": "--- | 6130 | Nissan"}, {"v": "-6131", "l": "--- | 6131"}], "LD": [{"v": "LD01-608", "l": "LD01 | 608 | 1988 Caterpillar 950E"}, {"v": "LD02-654", "l": "LD02 | 654 | 2004 Caterpillar 966GII"}, {"v": "LD03-6019", "l": "LD03 | 6019 | 2010 CAT 938H"}, {"v": "LD04-6078", "l": "LD04 | 6078 | 2015 CAT 950M"}, {"v": "LD05-6128", "l": "LD05 | 6128 | Bobcat 863.0"}, {"v": "-607", "l": "--- | 607 | 1971 Caterpillar 966C"}], "LIGHT": [{"v": "-5007", "l": "--- | 5007 | Klein KPT120"}, {"v": "-535", "l": "--- | 535 | 1998 Coleman MHL4000"}, {"v": "-536", "l": "--- | 536 | 1998 Coleman MHL4000"}, {"v": "-552", "l": "--- | 552 | Valew"}, {"v": "-5552", "l": "--- | 5552 | 2019 National LTS160-750"}, {"v": "-5553", "l": "--- | 5553 | 2019 National LTS160-750"}, {"v": "-5554", "l": "--- | 5554 | 2019 National LTS160-750"}, {"v": "-563", "l": "--- | 563 | Magnum 4060.0"}, {"v": "-565", "l": "--- | 565 | 2004 Allmand"}, {"v": "-574", "l": "--- | 574 | 2007 Wacker LTC4"}, {"v": "-575", "l": "--- | 575 | 2007 Wacker LTC4"}, {"v": "-579", "l": "--- | 579 | 2007 Wacker LTC4"}, {"v": "-5793", "l": "--- | 5793 | 2017 Atlas Copco V4"}, {"v": "-5794", "l": "--- | 5794 | 2019 Atlas Copco V4"}, {"v": "-5832", "l": "--- | 5832 | 2018 Atlas Copco V4"}, {"v": "-5833", "l": "--- | 5833 | 2018 Atlas Copco V4"}, {"v": "-5834", "l": "--- | 5834 | 2018 Atlas Copco V4"}, {"v": "-5835", "l": "--- | 5835 | 2018 Atlas Copco V4"}, {"v": "-5836", "l": "--- | 5836 | 2018 Atlas Copco V4"}, {"v": "-5837", "l": "--- | 5837 | 2018 Atlas Copco V4"}, {"v": "-5838", "l": "--- | 5838 | 2018 Atlas Copco V5"}, {"v": "-5850", "l": "--- | 5850 | 2019 Atlas Copco"}, {"v": "-5851", "l": "--- | 5851 | 2017 Atlas Copco"}, {"v": "-5852", "l": "--- | 5852 | Trinity"}, {"v": "-5853", "l": "--- | 5853 | Trinity"}], "MG": [{"v": "MG01-604", "l": "MG01 | 604 | 1988 Caterpillar 140G"}, {"v": "MG02-625", "l": "MG02 | 625 | 1995 Caterpillar 143H"}, {"v": "MG03-668", "l": "MG03 | 668 | 2009 Caterpillar 140M"}, {"v": "MG04-6120", "l": "MG04 | 6120 | 2016 CAT 12M3"}, {"v": "MG05-6158", "l": "MG05 | 6158 | 2013 CAT 140M2"}, {"v": "MG06-6159", "l": "MG06 | 6159 | 2012 John Deere 672G"}], "ML": [{"v": "ML01-666", "l": "ML01 | 666 | 1999 Genie Z45"}, {"v": "ML02-698", "l": "ML02 | 698 | 2000 JLG E450AJ"}, {"v": "ML03-6005", "l": "ML03 | 6005 | 1999 Genie GS1930"}, {"v": "ML04-6002", "l": "ML04 | 6002 | 2003 JLG 3246E2"}, {"v": "ML05-6003", "l": "ML05 | 6003 | 2003 JLG 3246E2"}, {"v": "ML06-6083", "l": "ML06 | 6083 | 2018 Snorkel A46JRT"}, {"v": "ML07-5828", "l": "ML07 | 5828 | 2018 Haulotte 1931.0"}, {"v": "ML08-5829", "l": "ML08 | 5829 | 2018 Haulotte 1931.0"}, {"v": "-5185", "l": "--- | 5185 | Sky Jack SJIII3219"}, {"v": "-5186", "l": "--- | 5186 | Sky Jack SJIII3219"}, {"v": "-531", "l": "--- | 531 | JLG40H"}, {"v": "-5609", "l": "--- | 5609 | 2019 Skyjack SJ111 3219"}, {"v": "-5610", "l": "--- | 5610 | 2021 Skyjack SJ111 3219"}], "PCMB": [{"v": "-5099", "l": "--- | 5099 | 2015 Wanco"}, {"v": "-5104", "l": "--- | 5104 | 2014 Wanco"}, {"v": "-5121", "l": "--- | 5121"}, {"v": "-5228", "l": "--- | 5228 | Hi Way Safety 120 Solar"}, {"v": "-5243", "l": "--- | 5243 | Highway Safety"}, {"v": "-568", "l": "--- | 568 | Solar Jack SJ5100"}, {"v": "-569", "l": "--- | 569 | Solar Jack SJ5100"}, {"v": "-5795", "l": "--- | 5795 | 2021 Wanco"}, {"v": "-5796", "l": "--- | 5796 | 2021 Wanco"}, {"v": "-5831", "l": "--- | 5831 | 2020 SolarTech Silent Messenger II"}], "SATC": [{"v": "SA01-486", "l": "SA01 | 486 | 2024 Isuzu NPR"}, {"v": "SA02-487", "l": "SA02 | 487 | 2024 Isuzu NPR"}, {"v": "SA03-488", "l": "SA03 | 488 | 2024 Isuzu NPR"}, {"v": "SA04-489", "l": "SA04 | 489 | 2024 Isuzu NPR"}, {"v": "SA05-3045", "l": "SA05 | 3045 | 2019 Ford F250"}, {"v": "SA06-3083", "l": "SA06 | 3083 | 2023 Ford F150"}, {"v": "SA07-3113", "l": "SA07 | 3113 | 2023 Ford F150"}, {"v": "SA08-3142", "l": "SA08 | 3142 | 2023 Ford F150"}, {"v": "SA09-3143", "l": "SA09 | 3143 | 2023 Ford F150"}, {"v": "SA10-3146", "l": "SA10 | 3146 | 2023 Ford F150"}, {"v": "SA11-3153", "l": "SA11 | 3153 | 2023 Ford F150"}, {"v": "SA12-3160", "l": "SA12 | 3160 | 2024 Ford F150"}, {"v": "SA13-3161", "l": "SA13 | 3161 | 2024 Ford F150"}, {"v": "SA14-3162", "l": "SA14 | 3162 | 2024 Ford F150"}, {"v": "SA15-3163", "l": "SA15 | 3163 | 2024 Ford F150"}, {"v": "SA16-3164", "l": "SA16 | 3164 | 2020 Ford F150"}, {"v": "SA17-3165", "l": "SA17 | 3165 | 2023 Ford F150"}, {"v": "SA18-3168", "l": "SA18 | 3168 | 2025 Ford F150"}, {"v": "SA19-3169", "l": "SA19 | 3169 | 2025 Ford F150"}, {"v": "SA20-3170", "l": "SA20 | 3170 | 2024 Ford F150"}, {"v": "SA21-3171", "l": "SA21 | 3171 | 2025 Ford F150"}, {"v": "SA22-3172", "l": "SA22 | 3172 | 2025 Ford F150"}, {"v": "SA23-3174", "l": "SA23 | 3174 | 2025 Ford F150"}, {"v": "SA24-3175", "l": "SA24 | 3175 | 2025 Ford F150"}, {"v": "SA25-3176", "l": "SA25 | 3176 | 2025 Ford F150"}, {"v": "SA26-3177", "l": "SA26 | 3177 | 2025 Ford F150"}, {"v": "SA27-3178", "l": "SA27 | 3178 | 2021 Ford F250 XL"}, {"v": "SA28-3179", "l": "SA28 | 3179 | 2021 Ford F250 XL"}, {"v": "SA29-3180", "l": "SA29 | 3180 | 2019 Ford F250 XL"}, {"v": "SA30-3181", "l": "SA30 | 3181 | 2019 Ford F250 XL"}, {"v": "SA31-3182", "l": "SA31 | 3182 | 2019 Ford F250 XL"}, {"v": "SA32-3183", "l": "SA32 | 3183 | 2019 Ford F250 XL"}, {"v": "SA33-3184", "l": "SA33 | 3184 | 2019 Ford F250"}, {"v": "SA34-3186", "l": "SA34 | 3186 | 2019 Ford F250"}, {"v": "SA35-3187", "l": "SA35 | 3187 | 2019 Ford F250 XL"}], "SL": [{"v": "SL01-629", "l": "SL01 | 629 | 2005 John Deere 210LE"}, {"v": "SL02-672", "l": "SL02 | 672 | 2005 John Deere 210LE"}, {"v": "SL03-685", "l": "SL03 | 685 | 2005 John Deere 210LE"}, {"v": "SL04-648", "l": "SL04 | 648 | 2007 Caterpillar 414EIL"}, {"v": "SL05-689", "l": "SL05 | 689 | 2007 CAT 414EIL"}, {"v": "SL06-692", "l": "SL06 | 692 | 2007 CAT 414EIL"}, {"v": "SL07-6067", "l": "SL07 | 6067 | 2020 CAT 415F2IL"}], "SS": [{"v": "SS01-681", "l": "SS01 | 681 | 2004 Caterpillar 287B"}, {"v": "SS02-628", "l": "SS02 | 628 | 2005 Caterpillar 257B"}, {"v": "SS03-677", "l": "SS03 | 677 | 2006 Caterpillar 248B"}, {"v": "SS04-691", "l": "SS04 | 691 | 2006 CAT 242B"}, {"v": "SS05-6033", "l": "SS05 | 6033 | 2018 CAT 299D2"}, {"v": "SS06-6056", "l": "SS06 | 6056 | 2019 CAT 262D"}, {"v": "SS07-6069", "l": "SS07 | 6069 | 2020 CAT 242D"}, {"v": "SS08-6075", "l": "SS08 | 6075 | 2021 CAT 242D3"}, {"v": "SS09-6115", "l": "SS09 | 6115 | 2023 CAT 262D3"}, {"v": "SS11-6122", "l": "SS11 | 6122 | 2017 Bobcat S550"}, {"v": "SS12-6137", "l": "SS12 | 6137 | 2023 CAT 279D3"}, {"v": "SS13-6143", "l": "SS13 | 6143 | 2019 CAT 279D3"}, {"v": "SS14-6154", "l": "SS14 | 6154 | 2019 CAT 289D"}, {"v": "SS15-6163", "l": "SS15 | 6163 | 2024 CAT 279D3"}, {"v": "SS16-6084", "l": "SS16 | 6084 | 2021 CAT 262D3"}, {"v": "SS17-6169", "l": "SS17 | 6169 | 2020 CAT 299D3XE"}, {"v": "-5819", "l": "--- | 5819 | CAT 60\" Bucket"}], "ST": [{"v": "ST01-441", "l": "ST01 | 441 | 2014 Peterbilt 367.0"}, {"v": "ST02-442", "l": "ST02 | 442 | 2014 Peterbilt 367.0"}, {"v": "ST03-465", "l": "ST03 | 465 | 2014 Peterbilt 386.0"}], "VEH": [{"v": "AU03-368", "l": "AU03 | 368 | 2009 Ford Edge"}, {"v": "AU04-301", "l": "AU04 | 301 | 2011 Ford Fusion"}, {"v": "AU05-3017", "l": "AU05 | 3017 | 2013 Ford Escape"}, {"v": "AU06-399", "l": "AU06 | 399 | 2013 Ford Fusion"}, {"v": "AU07-3006", "l": "AU07 | 3006 | 2013 Ford Taurus"}, {"v": "AU08-3016", "l": "AU08 | 3016 | 2015 Ford Escape"}, {"v": "AU09-3062", "l": "AU09 | 3062 | 2015 Ford Van"}, {"v": "AU10-3022", "l": "AU10 | 3022 | 2016 Ford Escape"}, {"v": "AU11-3019", "l": "AU11 | 3019 | 2016 Ford Fusion"}, {"v": "AU12-3033", "l": "AU12 | 3033 | 2017 Ford Escape"}, {"v": "AU13-3034", "l": "AU13 | 3034 | 2017 Ford Escape"}, {"v": "AU14-3046", "l": "AU14 | 3046 | 2020 Ford Explorer"}, {"v": "AU15-3073", "l": "AU15 | 3073 | 2021 Ford Explorer"}, {"v": "AU16-3115", "l": "AU16 | 3115 | 2023 Ford Explorer"}, {"v": "AU17-3132", "l": "AU17 | 3132 | 2021 Ford Explorer"}, {"v": "AU20-3154", "l": "AU20 | 3154 | 2024 Ford Explorer"}, {"v": "AU21-3173", "l": "AU21 | 3173 | 2025 Lincoln Navigator"}, {"v": "PU02-312", "l": "PU02 | 312 | 2004 Ford F250"}, {"v": "PU10-395", "l": "PU10 | 395 | 2010 Ford F150"}, {"v": "PU14-3007", "l": "PU14 | 3007 | 2013 Ford F150"}, {"v": "PU18-3020", "l": "PU18 | 3020 | 2015 Ford F150"}, {"v": "PU20-3021", "l": "PU20 | 3021 | 2016 Ford F150"}, {"v": "PU21-3026", "l": "PU21 | 3026 | 2016 Ford F150"}, {"v": "PU22-3025", "l": "PU22 | 3025 | 2016 Ford F150 Crew"}, {"v": "PU23-3023", "l": "PU23 | 3023 | 2016 Ford F150 Crew Cab"}, {"v": "PU24-3024", "l": "PU24 | 3024 | 2016 Ford F150 Spr Cab"}, {"v": "PU25-3036", "l": "PU25 | 3036 | 2017 Ford F150"}, {"v": "PU26-3029", "l": "PU26 | 3029 | 2017 Ford F250"}, {"v": "PU28-3037", "l": "PU28 | 3037 | 2017 Ford F250"}, {"v": "PU29-3027", "l": "PU29 | 3027 | 2017 Ford F250 Lariat"}, {"v": "PU30-3070", "l": "PU30 | 3070 | 2018 GMC Sierra 1500"}, {"v": "PU31-3041", "l": "PU31 | 3041 | 2018 Ford F250"}, {"v": "PU32-3049", "l": "PU32 | 3049 | 2020 Ford F250"}, {"v": "PU33-3054", "l": "PU33 | 3054 | 2020 Ford F250"}, {"v": "PU34-3069", "l": "PU34 | 3069 | 2021 Ford F150"}, {"v": "PU35-3076", "l": "PU35 | 3076 | 2022 Ford F250"}, {"v": "PU36-3078", "l": "PU36 | 3078 | 2022 Ford RANGER"}, {"v": "PU37-3079", "l": "PU37 | 3079 | 2022 Ford F250"}, {"v": "PU38-3084", "l": "PU38 | 3084 | 2022 Ford F250"}, {"v": "PU40-3091", "l": "PU40 | 3091 | 2023 Ford F150"}, {"v": "PU42-3098", "l": "PU42 | 3098 | 2023 Ford F150"}, {"v": "PU43-3103", "l": "PU43 | 3103 | 2023 Ford F250"}, {"v": "PU44-3104", "l": "PU44 | 3104 | 2023 Ford F250"}, {"v": "PU45-3105", "l": "PU45 | 3105 | 2023 Ford F250"}, {"v": "PU47-3116", "l": "PU47 | 3116 | 2023 Ford F250"}, {"v": "PU48-3117", "l": "PU48 | 3117 | 2023 Ford F250"}, {"v": "PU49-3118", "l": "PU49 | 3118 | 2023 Ford F350"}, {"v": "PU50-3119", "l": "PU50 | 3119 | 2023 Ford F350"}, {"v": "PU51-3123", "l": "PU51 | 3123 | 2011 Ford Ranger"}, {"v": "PU52-3125", "l": "PU52 | 3125 | 2019 Ford Ranger"}, {"v": "PU53-3133", "l": "PU53 | 3133 | 2012 Ford F250"}, {"v": "PU54-3141", "l": "PU54 | 3141 | 2023 Ford F150"}, {"v": "PU57-3145", "l": "PU57 | 3145 | 2014 Ford F250"}, {"v": "PU62-3155", "l": "PU62 | 3155 | 2015 Ford F150XL"}, {"v": "PU64-3157", "l": "PU64 | 3157 | 2024 GMC 2500 HDSierra"}, {"v": "PU65-3158", "l": "PU65 | 3158 | 2024 Ford F150"}, {"v": "PU66-3159", "l": "PU66 | 3159 | 2024 Ford F250"}, {"v": "PU73-3166", "l": "PU73 | 3166 | 2024 Ford F150"}, {"v": "PU74-3167", "l": "PU74 | 3167 | 2025 Ford Super Duty F250"}, {"v": "UT01-3002", "l": "UT01 | 3002 | 1996 Ford"}, {"v": "UT02-460", "l": "UT02 | 460 | 2005 Ford F650"}, {"v": "UT09-365", "l": "UT09 | 365 | 2006 Ford F350 XL"}, {"v": "UT100-3149", "l": "UT100 | 3149 | 2012 Ford F450"}, {"v": "UT101-485", "l": "UT101 | 485 | 2006 International 4300.0"}, {"v": "UT102-3151", "l": "UT102 | 3151 | 2024 Ford F350"}, {"v": "UT103-3152", "l": "UT103 | 3152 | 2024 Ford F250"}, {"v": "UT104-482", "l": "UT104 | 482 | 2005 Chevrolet C5500"}, {"v": "UT105-3150", "l": "UT105 | 3150 | 2024 Ford F350"}, {"v": "UT106-3185", "l": "UT106 | 3185 | 2019 Ford F250"}, {"v": "UT12-363", "l": "UT12 | 363 | 2007 Ford F450 XL"}, {"v": "UT14-362", "l": "UT14 | 362 | 2008 Ford F450 XL"}, {"v": "UT18-3003", "l": "UT18 | 3003 | 2013 Ford F250"}, {"v": "UT19-3008", "l": "UT19 | 3008 | 2014 Ford F250"}, {"v": "UT20-3009", "l": "UT20 | 3009 | 2014 Ford F250"}, {"v": "UT21-3061", "l": "UT21 | 3061 | 2015 GMC Sierra 2500"}, {"v": "UT22-3063", "l": "UT22 | 3063 | 2015 GMC Sierra 3500"}, {"v": "UT25-3018", "l": "UT25 | 3018 | 2015 Ford F550"}, {"v": "UT26-3072", "l": "UT26 | 3072 | 2016 GMC Sierra 3500"}, {"v": "UT27-3028", "l": "UT27 | 3028 | 2016 Ford F450"}, {"v": "UT28-3064", "l": "UT28 | 3064 | 2017 GMC Sierra 3500"}, {"v": "UT29-3039", "l": "UT29 | 3039 | 2017 Ford F450"}, {"v": "UT30-3042", "l": "UT30 | 3042 | 2017 Ford F250"}, {"v": "UT31-3038", "l": "UT31 | 3038 | 2017 Ford F550"}, {"v": "UT32-3040", "l": "UT32 | 3040 | 2018 Ford F250"}, {"v": "UT33-3043", "l": "UT33 | 3043 | 2018 Ford F550"}, {"v": "UT34-3057", "l": "UT34 | 3057 | 2018 Ford F550"}, {"v": "UT36-3059", "l": "UT36 | 3059 | 2019 GMC Sierra 2500"}, {"v": "UT37-3065", "l": "UT37 | 3065 | 2019 GMC Sierra 2500"}, {"v": "UT38-3060", "l": "UT38 | 3060 | 2019 GMC Sierra 3500"}, {"v": "UT39-3051", "l": "UT39 | 3051 | 2020 Ford F350"}, {"v": "UT40-3056", "l": "UT40 | 3056 | 2020 Ford F350"}, {"v": "UT41-3047", "l": "UT41 | 3047 | 2020 Ford F450"}, {"v": "UT42-3050", "l": "UT42 | 3050 | 2020 Ford F450"}, {"v": "UT43-3048", "l": "UT43 | 3048 | 2020 Ford F550"}, {"v": "UT44-3052", "l": "UT44 | 3052 | 2020 Ford F550"}, {"v": "UT45-3066", "l": "UT45 | 3066 | 2021 GMC Sierra 2500"}, {"v": "UT46-3053", "l": "UT46 | 3053 | 2021 Ford F350"}, {"v": "UT47-3058", "l": "UT47 | 3058 | 2021 Ford F350"}, {"v": "UT48-3055", "l": "UT48 | 3055 | 2021 Ford F450"}, {"v": "UT49-3067", "l": "UT49 | 3067 | 2021 Ford F450"}, {"v": "UT50-3068", "l": "UT50 | 3068 | 2021 Ford F450"}, {"v": "UT52-3074", "l": "UT52 | 3074 | 2022 Ford F450"}, {"v": "UT53-3075", "l": "UT53 | 3075 | 2022 Ford F450"}, {"v": "UT54-3080", "l": "UT54 | 3080 | 2022 Ford F250"}, {"v": "UT55-3081", "l": "UT55 | 3081 | 2022 Ford F250"}, {"v": "UT56-3082", "l": "UT56 | 3082 | 2022 Ford F550"}, {"v": "UT57-469", "l": "UT57 | 469 | 2018 International 4300.0"}, {"v": "UT58-3085", "l": "UT58 | 3085 | 2019 Ford F550"}, {"v": "UT59-3086", "l": "UT59 | 3086 | 2019 Ford F550"}, {"v": "UT60-3087", "l": "UT60 | 3087 | 2019 Ford F550"}, {"v": "UT61-3088", "l": "UT61 | 3088 | 2019 Ford F550"}, {"v": "UT62-3089", "l": "UT62 | 3089 | 2019 Ford F550"}, {"v": "UT63-3090", "l": "UT63 | 3090 | 2019 Ford F550"}, {"v": "UT64-3092", "l": "UT64 | 3092 | 2008 Ford F550"}, {"v": "UT65-3100", "l": "UT65 | 3100 | 2008 Ford F450"}, {"v": "UT66-3094", "l": "UT66 | 3094 | 2019 Ford F550"}, {"v": "UT67-3095", "l": "UT67 | 3095 | 2019 Ford F550"}, {"v": "UT68-3096", "l": "UT68 | 3096 | 2019 Ford F550"}, {"v": "UT69-3097", "l": "UT69 | 3097 | 2019 Ford F550"}, {"v": "UT70-3122", "l": "UT70 | 3122 | 2008 Ford F550"}, {"v": "UT71-3101", "l": "UT71 | 3101 | 2009 Ford F450"}, {"v": "UT72-3102", "l": "UT72 | 3102 | 2022 Ford F250"}, {"v": "UT73-3106", "l": "UT73 | 3106 | 2009 Ford F450"}, {"v": "UT74-3107", "l": "UT74 | 3107 | 2009 Ford F450"}, {"v": "UT75-3108", "l": "UT75 | 3108 | 2009 Ford F450"}, {"v": "UT76-3109", "l": "UT76 | 3109 | 2009 Ford F450"}, {"v": "UT77-473", "l": "UT77 | 473 | 2018 Freightliner M2106"}, {"v": "UT78-3110", "l": "UT78 | 3110 | 2019 Dodge Ram 5500"}, {"v": "UT79-3111", "l": "UT79 | 3111 | 2021 Dodge Ram 5500"}, {"v": "UT80-3112", "l": "UT80 | 3112 | 2021 Dodge Ram 5500"}, {"v": "UT81-3114", "l": "UT81 | 3114 | 2023 Ford F350"}, {"v": "UT82-3120", "l": "UT82 | 3120 | 2008 Ford F550"}, {"v": "UT83-3121", "l": "UT83 | 3121 | 2008 Ford F550"}, {"v": "UT84-3124", "l": "UT84 | 3124 | 2013 Ford F550"}, {"v": "UT85-480", "l": "UT85 | 480 | 2009 Chevrolet C7500"}, {"v": "UT86-3129", "l": "UT86 | 3129 | 2023 Ford F550"}, {"v": "UT87-3130", "l": "UT87 | 3130 | 2023 Ford F550"}, {"v": "UT88-3131", "l": "UT88 | 3131 | 2024 Ford F550"}, {"v": "UT89-3126", "l": "UT89 | 3126 | 2008 Ford F550"}, {"v": "UT90-3127", "l": "UT90 | 3127 | 2018 Ford F350"}, {"v": "UT91-3128", "l": "UT91 | 3128 | 2018 Ford F350"}, {"v": "UT92-3134", "l": "UT92 | 3134 | 2009 Ford F350"}, {"v": "UT93-3135", "l": "UT93 | 3135 | 2008 Ford F450"}, {"v": "UT94-3136", "l": "UT94 | 3136 | 2011 Ford F550"}, {"v": "UT95-3137", "l": "UT95 | 3137 | 2011 Ford F550"}, {"v": "UT96-3138", "l": "UT96 | 3138 | 2003 Chev C2500"}, {"v": "UT97-3139", "l": "UT97 | 3139 | 2007 Dodge 3500.0"}, {"v": "UT98-3144", "l": "UT98 | 3144 | 2023 Ford F350"}, {"v": "UT99-3148", "l": "UT99 | 3148 | 2009 Ford F550"}, {"v": "-3077", "l": "--- | 3077 | 2022 Ford F350"}, {"v": "-3099", "l": "--- | 3099 | 2022 Ford Explorer"}, {"v": "-313", "l": "--- | 313 | 2002 Cadillac"}], "VT": [{"v": "VT01-466", "l": "VT01 | 466 | 2023 Freightliner 114SD"}, {"v": "VT02-470", "l": "VT02 | 470 | 2022 Kenworth T880"}, {"v": "VT03-479", "l": "VT03 | 479 | 2023 Kenworth T880"}, {"v": "VT04-484", "l": "VT04 | 484 | 2008 Ford F350"}], "WT": [{"v": "WT01-401", "l": "WT01 | 401 | 1977 Kenworth 4200 G"}, {"v": "WT02-403", "l": "WT02 | 403 | 1995 Peterbilt 2000 G"}, {"v": "WT03-420", "l": "WT03 | 420 | 2003 Freightliner 4000 G"}, {"v": "WT04-426", "l": "WT04 | 426 | 1994 Peterbilt 5000 G"}, {"v": "WT05-431", "l": "WT05 | 431 | 2001 GMC C7500"}, {"v": "WT06-434", "l": "WT06 | 434 | 2004 Ford F750 XL"}, {"v": "WT07-450", "l": "WT07 | 450 | 2018 Peterbilt 348.0"}, {"v": "WT08-451", "l": "WT08 | 451 | 1985 Kenworth T800"}, {"v": "WT09-458", "l": "WT09 | 458 | 2020 Ford F750"}, {"v": "WT10-461", "l": "WT10 | 461 | 1995 Kenworth 4000 G"}, {"v": "WT11-462", "l": "WT11 | 462 | 1996 Kenworth T800"}, {"v": "WT12-471", "l": "WT12 | 471 | 2012 Kenworth T370"}, {"v": "WT13-472", "l": "WT13 | 472 | 2012 Kenworth T370"}, {"v": "WT14-476", "l": "WT14 | 476 | 2023 Kenworth T480"}, {"v": "WT15-475", "l": "WT15 | 475 | 2009 International 7400.0"}, {"v": "WT16-481", "l": "WT16 | 481 | 2014 Peterbilt 388.0"}]};
+
+var CHECKLISTS = {"EX": [["leaks", "Leaks (oil, coolant, hydraulic, fuel)"], ["fire_ext", "Fire extinguisher present & charged"], ["lights", "Lights & reflectors"], ["horn", "Horn / backup alarm"], ["engine_oil", "Engine oil level"], ["coolant", "Coolant level"], ["physical", "Physical condition (dents, cracks, damage)"], ["manual_decals", "Operator manual / safety decals present"], ["hyd_fluid", "Hydraulic fluid level"], ["hyd_hoses", "Hydraulic hoses & fittings (cracks, chafing, leaks)"], ["hyd_cylinders", "Hydraulic cylinders (rod scoring, seal leaks)"], ["hyd_couplers", "Quick couplers (wear, lock engagement)"], ["track_tension", "Track tension & alignment"], ["track_pads", "Track pads / shoes (wear, cracking)"], ["rollers_idlers", "Rollers, idlers, sprockets (wear, leaking seals)"], ["boom_cond", "Boom condition (cracks, welds, dents)"], ["stick_cond", "Stick condition (cracks, welds, bending)"], ["bucket_teeth", "Bucket teeth (worn, missing, cracked)"], ["cutting_edge", "Bucket cutting edge wear"], ["bucket_pins", "Bucket pins & bushings (play, wear)"], ["thumb_grapple", "Thumb / grapple condition (if equipped)"], ["cab_rops", "Cab / ROPS / FOPS integrity"], ["seatbelt", "Seatbelt condition"], ["controls", "All joystick controls responsive"], ["mirrors_camera", "Mirrors & camera system"], ["swing_bearing", "Swing bearing (play, noise)"], ["counterweight", "Counterweight bolts tight"], ["ground_engage", "Ground engaging tools condition"]], "BH": [["leaks", "Leaks (oil, coolant, hydraulic, fuel)"], ["fire_ext", "Fire extinguisher present & charged"], ["lights", "Lights & reflectors"], ["horn", "Horn / backup alarm"], ["engine_oil", "Engine oil level"], ["coolant", "Coolant level"], ["physical", "Physical condition (dents, cracks, damage)"], ["manual_decals", "Operator manual / safety decals present"], ["loader_edge", "Loader bucket cutting edge wear"], ["loader_teeth", "Loader bucket teeth (if equipped)"], ["loader_pins", "Loader arm pins & bushings"], ["loader_cyl", "Loader cylinder condition"], ["bh_teeth", "Backhoe bucket teeth (worn, missing, cracked)"], ["bh_edge", "Backhoe bucket cutting edge"], ["dipper_pins", "Dipper stick pins & bushings (play)"], ["boom_pins", "Boom pins & bushings"], ["hyd_cylinders", "Hydraulic cylinders (rod scoring, leaks)"], ["stabilizer_pads", "Stabilizer pads (wear, cracks)"], ["stabilizer_cyl", "Stabilizer cylinders & pins"], ["tires", "Tires & tire pressure (all four)"], ["trans_fluid", "Transmission fluid level"], ["steering", "Steering (play, responsiveness)"], ["brakes", "Brakes (service & parking)"], ["fourwd", "4WD engagement (if equipped)"], ["cab_rops", "Cab / ROPS / seatbelt"], ["controls", "All controls responsive"]], "LD": [["leaks", "Leaks (oil, coolant, hydraulic, fuel)"], ["fire_ext", "Fire extinguisher present & charged"], ["lights", "Lights & reflectors"], ["horn", "Horn / backup alarm"], ["engine_oil", "Engine oil level"], ["coolant", "Coolant level"], ["physical", "Physical condition (dents, cracks, damage)"], ["manual_decals", "Operator manual / safety decals present"], ["bucket_edge", "Bucket cutting edge (wear, bolts)"], ["bucket_teeth", "Bucket teeth (worn, missing)"], ["quick_coupler", "Quick coupler engagement & locks"], ["bucket_pins", "Bucket pins & bushings"], ["hyd_fluid", "Hydraulic fluid level"], ["lift_tilt_cyl", "Lift & tilt cylinders (leaks, rod condition)"], ["hyd_hoses", "Hydraulic hoses (cracks, chafing)"], ["tires", "Tire condition & pressure (all four)"], ["tire_sidewall", "Tire sidewall cuts or damage"], ["lug_nuts", "Lug nuts tight"], ["trans_fluid", "Transmission fluid level"], ["diff_oil", "Differential oil level"], ["steering_artic", "Steering articulation joint (wear, play)"], ["brakes", "Brakes (service & parking)"], ["cab_rops", "Cab / ROPS / FOPS"], ["seatbelt", "Seatbelt"], ["controls", "All controls responsive"]], "SL": [["leaks", "Leaks (oil, coolant, hydraulic, fuel)"], ["fire_ext", "Fire extinguisher present & charged"], ["lights", "Lights & reflectors"], ["horn", "Horn / backup alarm"], ["engine_oil", "Engine oil level"], ["coolant", "Coolant level"], ["physical", "Physical condition (dents, cracks, damage)"], ["manual_decals", "Operator manual / safety decals present"], ["bucket_edge", "Bucket cutting edge wear"], ["bucket_cond", "Bucket condition (cracks, welds)"], ["bucket_pins", "Bucket pins & bushings"], ["lift_pins", "Lift arm pins & bushings"], ["tires", "Tire condition & pressure"], ["steering", "Steering"], ["brakes", "Brakes (service & parking)"], ["hyd_fluid", "Hydraulic fluid level"], ["hyd_hoses", "Hydraulic hoses & fittings"], ["cab_rops", "ROPS / seatbelt"], ["controls", "Controls responsive"]], "SS": [["leaks", "Leaks (oil, coolant, hydraulic, fuel)"], ["fire_ext", "Fire extinguisher present & charged"], ["lights", "Lights & reflectors"], ["horn", "Horn / backup alarm"], ["engine_oil", "Engine oil level"], ["coolant", "Coolant level"], ["physical", "Physical condition (dents, cracks, damage)"], ["manual_decals", "Operator manual / safety decals present"], ["tracks_tires", "Tires or tracks condition"], ["track_tension", "Track tension (if tracked)"], ["drive_motors", "Drive motors / chains"], ["bucket_edge", "Bucket cutting edge wear"], ["bucket_teeth", "Bucket teeth (if equipped)"], ["quick_attach", "Quick attach plate & locks"], ["hyd_fluid", "Hydraulic fluid level"], ["aux_hyd", "Auxiliary hydraulic couplers (leaks, function)"], ["hyd_hoses", "Hydraulic hoses (cracks, chafing, rubbing)"], ["lift_tilt_cyl", "Lift & tilt cylinders"], ["cab_rops", "Cab / ROPS / FOPS"], ["seatbelt_bar", "Seatbelt / seat bar"], ["door_restraint", "Door / restraint system"], ["controls", "Controls responsive (both sticks/pedals)"]], "DZ": [["leaks", "Leaks (oil, coolant, hydraulic, fuel)"], ["fire_ext", "Fire extinguisher present & charged"], ["lights", "Lights & reflectors"], ["horn", "Horn / backup alarm"], ["engine_oil", "Engine oil level"], ["coolant", "Coolant level"], ["physical", "Physical condition (dents, cracks, damage)"], ["manual_decals", "Operator manual / safety decals present"], ["track_tension", "Track tension & alignment"], ["track_shoes", "Track shoes / pads (wear, grouser height)"], ["rollers", "Rollers top & bottom (wear, leaking seals)"], ["idlers", "Idlers (wear, play)"], ["sprockets", "Sprockets (tooth wear)"], ["final_drives", "Final drives (leaks, noise)"], ["cutting_edge", "Blade cutting edge (wear, bolt condition)"], ["end_bits", "End bits (wear, cracking)"], ["moldboard", "Moldboard condition (cracks, welds, gouges)"], ["blade_cyl", "Blade lift / tilt / angle cylinders"], ["push_arms", "Push arms & pins (wear, play)"], ["ripper_tooth", "Ripper shank / tooth wear (if equipped)"], ["ripper_cyl", "Ripper cylinder (if equipped)"], ["cab_rops", "Cab / ROPS / FOPS"], ["seatbelt", "Seatbelt"], ["steering_clutch", "Steering clutches / controls responsive"], ["transmission", "Transmission (forward & reverse engagement)"], ["air_filter", "Air filter indicator"]], "MG": [["leaks", "Leaks (oil, coolant, hydraulic, fuel)"], ["fire_ext", "Fire extinguisher present & charged"], ["lights", "Lights & reflectors"], ["horn", "Horn / backup alarm"], ["engine_oil", "Engine oil level"], ["coolant", "Coolant level"], ["physical", "Physical condition (dents, cracks, damage)"], ["manual_decals", "Operator manual / safety decals present"], ["cutting_edge", "Cutting edge (wear, bolt condition)"], ["end_bits", "End bits (both sides)"], ["moldboard", "Moldboard condition"], ["circle", "Circle & turntable (wear, play, teeth)"], ["circle_drive", "Circle drive motor / gears"], ["drawbar", "Drawbar condition"], ["blade_shift_cyl", "Blade shift cylinder"], ["blade_function", "Blade tilt & side shift function"], ["tires", "Tire condition & pressure (all six)"], ["tire_sidewall", "Tire sidewall damage"], ["tandem", "Tandem drive condition"], ["artic_joint", "Articulation joint (wear, play)"], ["scarifier", "Scarifier teeth wear (if equipped)"], ["controls", "All blade controls responsive"], ["steering", "Steering (front wheel lean, articulation)"], ["brakes", "Brakes"], ["cab_rops", "Cab / ROPS / seatbelt"]], "AR": [["leaks", "Leaks (oil, coolant, hydraulic, fuel)"], ["fire_ext", "Fire extinguisher present & charged"], ["lights", "Lights & reflectors"], ["horn", "Horn / backup alarm"], ["engine_oil", "Engine oil level"], ["coolant", "Coolant level"], ["physical", "Physical condition (dents, cracks, damage)"], ["manual_decals", "Operator manual / safety decals present"], ["drum_surface", "Drum surface condition (flat spots, damage, buildup)"], ["drum_edge", "Drum edge condition"], ["vibration", "Vibration system operation (if vibratory)"], ["scraper_bar", "Drum scraper / cleaner bar condition"], ["water_spray", "Water spray system (nozzles, pump, tank)"], ["padfoot", "Pad condition & height (if padfoot)"], ["tires", "Tire condition & pressure (if pneumatic)"], ["hyd_system", "Hydraulic system (fluid, hoses, leaks)"], ["steering", "Steering"], ["brakes", "Brakes (service & parking)"], ["cab_rops", "Cab / ROPS / seatbelt"]], "AP": [["leaks", "Leaks (oil, coolant, hydraulic, fuel)"], ["fire_ext", "Fire extinguisher present & charged"], ["lights", "Lights & reflectors"], ["horn", "Horn / backup alarm"], ["engine_oil", "Engine oil level"], ["coolant", "Coolant level"], ["physical", "Physical condition (dents, cracks, damage)"], ["manual_decals", "Operator manual / safety decals present"], ["screed_plates", "Screed plates (wear, warping)"], ["screed_heaters", "Screed heaters (ignition, heat distribution)"], ["tamper_vibrators", "Tamper bar & vibrators"], ["end_gates", "End gates"], ["conveyor", "Conveyor chains & slats (wear, tension)"], ["auger_flights", "Auger flights (wear, cracking, buildup)"], ["auger_gearbox", "Auger gearbox (oil level, leaks)"], ["hopper_wings", "Hopper wings (hydraulic function)"], ["push_rollers", "Push rollers condition"], ["tracks_tires", "Track / tire condition"], ["hyd_system", "Hydraulic system (fluid, hoses)"], ["controls", "All controls responsive"], ["safety_guards", "Safety guards in place"]], "FL_RL": [["leaks", "Leaks (oil, coolant, hydraulic, fuel)"], ["fire_ext", "Fire extinguisher present & charged"], ["lights", "Lights & reflectors"], ["horn", "Horn / backup alarm"], ["engine_oil", "Engine oil level"], ["coolant", "Coolant level"], ["physical", "Physical condition (dents, cracks, damage)"], ["manual_decals", "Operator manual / safety decals present"], ["forks_boom", "Fork / boom condition (cracks, bending, wear)"], ["fork_pins", "Fork locking pins engaged"], ["load_guard", "Fork backrest / load guard"], ["mast_chains", "Mast chains & rollers (wear, tension, lubrication)"], ["carriage", "Carriage & slide"], ["hyd_fluid", "Hydraulic fluid level"], ["lift_tilt_cyl", "Lift, tilt, & side shift cylinders"], ["hyd_hoses", "Hydraulic hoses"], ["tires", "Tire condition (all tires)"], ["overhead_guard", "Overhead guard / canopy"], ["seatbelt", "Seatbelt"], ["load_chart", "Load chart / capacity placard present"], ["parking_brake", "Parking brake"], ["controls", "All controls responsive"]], "ML": [["leaks", "Leaks (oil, coolant, hydraulic, fuel)"], ["fire_ext", "Fire extinguisher present & charged"], ["lights", "Lights & reflectors"], ["horn", "Horn / backup alarm"], ["engine_oil", "Engine oil level"], ["coolant", "Coolant level"], ["physical", "Physical condition (dents, cracks, damage)"], ["manual_decals", "Operator manual / safety decals present"], ["boom_scissor", "Boom sections / scissor arms (cracks, dents, bending)"], ["boom_pins", "Boom / scissor pins & bushings (wear)"], ["platform", "Platform / basket condition"], ["railing_gates", "Platform railing & gates (latches secure)"], ["load_placard", "Platform load rating placard"], ["leveling", "Leveling system"], ["hyd_fluid", "Hydraulic fluid level"], ["hyd_hoses", "Hydraulic hoses & fittings"], ["lift_function", "Lift & lower function (smooth, no jerking)"], ["ground_controls", "Ground controls operational"], ["platform_controls", "Platform controls operational"], ["emergency_lower", "Emergency lowering function tested"], ["battery", "Battery condition / charge (if electric)"], ["tires", "Tire condition & pressure"], ["outriggers", "Outriggers / stabilizers (if equipped)"], ["pothole_protect", "Pothole protection system (scissor lifts)"], ["function_test", "Full range of motion test before use"], ["tilt_sensor", "Tilt sensor (if equipped)"]], "CT": [["leaks", "Leaks (oil, coolant, hydraulic, fuel)"], ["fire_ext", "Fire extinguisher present & charged"], ["lights", "Lights & reflectors"], ["horn", "Horn / backup alarm"], ["engine_oil", "Engine oil level"], ["coolant", "Coolant level"], ["physical", "Physical condition (dents, cracks, damage)"], ["manual_decals", "Operator manual / safety decals present"], ["boom_sections", "Boom sections (cracks, dents, straightness)"], ["boom_pins", "Boom pins"], ["boom_telescope", "Boom extension / telescoping function"], ["jib", "Jib condition (if equipped)"], ["wire_rope", "Wire rope (broken wires, kinking, corrosion)"], ["sheaves", "Sheaves & pulleys (wear, alignment)"], ["hook", "Hook (safety latch, throat opening, twist)"], ["hook_block", "Hook block & anti-two-block device"], ["outrigger_beams", "Outrigger beams & cylinders"], ["outrigger_pads", "Outrigger pads (cracks, condition)"], ["outrigger_test", "Full extension & retraction test"], ["lmi", "Load moment indicator (LMI) functional"], ["load_charts", "Load charts present & legible"], ["swing_brake", "Swing brake"], ["crane_controls", "All crane controls responsive"], ["limit_switches", "Limit switches (boom angle, anti-two-block)"], ["annual_insp", "Annual inspection current (sticker)"], ["brakes", "Truck brakes (service, parking, emergency)"], ["tires", "Tires & pressure (all axles)"], ["steering", "Steering"]], "DT": [["leaks", "Leaks (oil, coolant, hydraulic, fuel)"], ["fire_ext", "Fire extinguisher present & charged"], ["lights", "Lights & reflectors"], ["horn", "Horn / backup alarm"], ["engine_oil", "Engine oil level"], ["coolant", "Coolant level"], ["physical", "Physical condition (dents, cracks, damage)"], ["manual_decals", "Operator manual / safety decals present"], ["brakes", "Brakes (service, parking, emergency)"], ["tires", "Tires & tire pressure (all axles)"], ["lug_nuts", "Lug nuts tight"], ["steering", "Steering (play, responsiveness)"], ["mirrors", "Windshield & mirrors"], ["seatbelt", "Seatbelt"], ["wipers", "Wipers & washers"], ["exhaust", "Exhaust system (leaks, hangers, heat shields)"], ["trans_fluid", "Transmission fluid level"], ["diff_oil", "Differential oil level"], ["pto", "PTO engagement"], ["driveline", "Driveline / U-joints"], ["dump_body", "Dump body condition (cracks, rust, holes)"], ["dump_hinges", "Dump body hinges & pins"], ["tailgate", "Tailgate operation (latches, hinges, chains)"], ["dump_cyl", "Dump cylinder (leaks, rod condition)"], ["dump_function", "Dump raise & lower function"], ["dump_prop", "Dump body prop rod / safety pin"], ["mud_flaps", "Mud flaps / splash guards"], ["dot_tape", "DOT reflective tape"], ["marker_lights", "All marker / clearance lights"]], "WT": [["leaks", "Leaks (oil, coolant, hydraulic, fuel)"], ["fire_ext", "Fire extinguisher present & charged"], ["lights", "Lights & reflectors"], ["horn", "Horn / backup alarm"], ["engine_oil", "Engine oil level"], ["coolant", "Coolant level"], ["physical", "Physical condition (dents, cracks, damage)"], ["manual_decals", "Operator manual / safety decals present"], ["tank_cond", "Water tank condition (leaks, corrosion)"], ["tank_baffles", "Tank baffles (sound check for looseness)"], ["fill_valve", "Fill valve & overflow"], ["spray_heads", "Spray heads / nozzles (all positions)"], ["spray_bar", "Spray bar condition"], ["water_cannon", "Water cannon / side spray (if equipped)"], ["pump_op", "Pump operation & priming"], ["water_hoses", "Water system hoses & fittings"], ["water_gauge", "Water level gauge functional"], ["pto", "PTO engagement for pump"], ["brakes", "Brakes (service, parking, emergency)"], ["tires", "Tires & tire pressure (all axles)"], ["steering", "Steering"], ["seatbelt", "Seatbelt"], ["mirrors", "Windshield & mirrors"], ["exhaust", "Exhaust system"], ["mud_flaps", "Mud flaps"], ["marker_lights", "All marker / clearance lights"]], "ST": [["leaks", "Leaks (oil, coolant, hydraulic, fuel)"], ["fire_ext", "Fire extinguisher present & charged"], ["lights", "Lights & reflectors"], ["horn", "Horn / backup alarm"], ["engine_oil", "Engine oil level"], ["coolant", "Coolant level"], ["physical", "Physical condition (dents, cracks, damage)"], ["manual_decals", "Operator manual / safety decals present"], ["brakes", "Truck brakes (service, parking, emergency)"], ["tires_truck", "Truck tires & pressure"], ["steering", "Steering"], ["seatbelt", "Seatbelt"], ["mirrors", "Windshield & mirrors"], ["deck_cond", "Deck condition (planking, steel, damage)"], ["ramps", "Ramps (condition, hinges, chains, springs)"], ["tiedowns", "Tie-down points / D-rings (welded solid)"], ["chain_storage", "Chain / binder storage"], ["beavertail", "Beavertail condition"], ["air_brakes", "Air brake connections (glad hands, lines)"], ["trailer_brakes", "Trailer brakes function"], ["trailer_lights", "Trailer lights (all positions)"], ["landing_gear", "Landing gear operation"], ["kingpin", "Kingpin / fifth wheel engagement"], ["tires_trailer", "Trailer tire condition (all axles)"], ["suspension", "Suspension (air bags, springs, hangers)"], ["mud_flaps", "Mud flaps"], ["wide_load", "Wide load / oversize permits (if needed)"]], "VT": [["leaks", "Leaks (oil, coolant, hydraulic, fuel)"], ["fire_ext", "Fire extinguisher present & charged"], ["lights", "Lights & reflectors"], ["horn", "Horn / backup alarm"], ["engine_oil", "Engine oil level"], ["coolant", "Coolant level"], ["physical", "Physical condition (dents, cracks, damage)"], ["manual_decals", "Operator manual / safety decals present"], ["hyd_oil", "Hydraulic oil level"], ["blower_oil", "Blower / fan spindle box oil level"], ["transfer_oil", "Transfer case oil level (if equipped)"], ["blower_drive", "Blower driveline condition"], ["micro_strainer", "Blower micro strainer (inspect/drain/clean)"], ["vac_hoses", "All vacuum hoses (condition, connections)"], ["relief_valves", "Vacuum relief valves (function test)"], ["debris_screens", "Debris body screens (clean)"], ["make_break", "Make/break seals"], ["air_tanks", "Air tanks (drained)"], ["silencer", "Silencer(s) (drained)"], ["cyclone", "Cyclone & dust box (clean)"], ["water_filter", "Water Y-strainer filter screen"], ["water_hoses", "Water & hydraulic hoses (wear, damage)"], ["gaskets", "Hoses & gaskets (leaks)"], ["air_compressor", "Air compressor"], ["safety_guards", "Safety equipment & guards"], ["brakes", "Brakes (service, parking, emergency)"], ["tires", "Tires & tire pressure"], ["steering", "Steering"]], "SATC": [["leaks", "Leaks (oil, coolant, hydraulic, fuel)"], ["fire_ext", "Fire extinguisher present & charged"], ["lights", "Lights & reflectors"], ["horn", "Horn / backup alarm"], ["engine_oil", "Engine oil level"], ["coolant", "Coolant level"], ["physical", "Physical condition (dents, cracks, damage)"], ["manual_decals", "Operator manual / safety decals present"], ["tires", "Tires & tire pressure"], ["brakes", "Brakes"], ["all_lights", "Lights (headlights, brake, turn, hazard)"], ["mirrors", "Mirrors (both sides)"], ["seatbelt", "Seatbelt"], ["wipers", "Wipers & washer fluid"], ["fluids", "Fluid levels (oil, coolant, washer)"], ["truck_arrowboard", "Truck-mounted arrow board (function test, all patterns)"], ["pcmb_mounted", "PCMB (if mounted, function test)"], ["cone_count", "Cone / channelizer storage & count"], ["sign_storage", "Sign storage & condition"], ["flag_paddle", "Flag / paddle condition"], ["hivis_ppe", "Hi-vis vest & PPE on board"], ["radio", "Radio / communication operational"], ["warning_lights", "Flashing / warning lights on truck"], ["flatbed_deck", "Flatbed deck condition (if flatbed)"], ["flatbed_tiedowns", "Tie-down points (if flatbed)"], ["headache_rack", "Headache rack condition (if flatbed)"], ["toolbox", "Toolbox / storage compartments secure"]], "ARROW": [["frame", "Frame condition (cracks, bending)"], ["tires", "Tires & tire pressure"], ["hitch", "Hitch & coupler (ball or pintle)"], ["safety_chains", "Safety chains"], ["tow_lights", "Tow lights (brake, turn, running)"], ["panel_leds", "Arrow board panel (all LEDs functional)"], ["patterns", "All arrow patterns test (left, right, caution, bar)"], ["solar_panel", "Solar panel condition (if solar powered)"], ["battery", "Battery charge level"], ["control_box", "Control box / remote operational"], ["leveling_jacks", "Leveling jacks / stabilizers"], ["reflective", "Reflective sheeting / visibility"]], "LIGHT": [["frame", "Frame condition"], ["tires", "Tires & tire pressure"], ["hitch", "Hitch & coupler"], ["safety_chains", "Safety chains"], ["tow_lights", "Tow lights"], ["mast_raise", "Mast raise & lower function"], ["mast_rotation", "Mast rotation"], ["light_heads", "All light heads functional (aim, output)"], ["bulb_led", "Bulb / LED condition"], ["generator", "Generator / engine condition (if fuel powered)"], ["solar_panel", "Solar panel condition (if solar)"], ["battery", "Battery charge level"], ["photo_sensor", "Auto-on / photo sensor (if equipped)"], ["leveling_jacks", "Leveling jacks / stabilizers"], ["fuel_level", "Fuel level (if engine)"]], "PCMB": [["frame", "Frame condition"], ["tires", "Tires & tire pressure"], ["hitch", "Hitch & coupler"], ["safety_chains", "Safety chains"], ["tow_lights", "Tow lights"], ["display_panel", "Display panel (all pixels / LEDs functional)"], ["message_prog", "Message programming (display, change messages)"], ["controller", "Controller / keypad operational"], ["solar_panel", "Solar panel condition (if solar)"], ["battery", "Battery charge level"], ["remote", "Remote control function (if equipped)"], ["leveling_jacks", "Leveling jacks / stabilizers"], ["reflective", "Visibility / reflective sheeting"]], "DUMP_TR": [["frame", "Frame condition (cracks, bending, corrosion)"], ["hitch", "Hitch & coupler (ball or pintle)"], ["safety_chains", "Safety chains"], ["tow_lights", "Tow lights (brake, turn, running)"], ["tires", "Tires & tire pressure"], ["lug_nuts", "Lug nuts tight"], ["dump_body", "Dump body condition (cracks, holes, dents)"], ["dump_cyl", "Dump cylinder (leaks, rod condition)"], ["dump_function", "Dump function (raise & lower)"], ["tailgate", "Tailgate (latches, hinges, chains)"], ["dump_prop", "Dump body prop rod / safety"], ["hyd_lines", "Hydraulic lines & fittings"], ["battery_power", "Battery / power source for hydraulic pump"], ["suspension", "Suspension (springs, axle)"], ["mud_flaps", "Mud flaps"], ["jack", "Jack / stabilizer stand"]], "VEH": [["tires", "Tires & tire pressure (all four + spare)"], ["tire_tread", "Tire tread depth"], ["ext_lights", "Lights (headlights, brake, turn, reverse, hazard)"], ["mirrors", "Mirrors (both sides, rearview)"], ["windshield", "Windshield (cracks, chips)"], ["wipers", "Wipers & washer fluid"], ["body_damage", "Body damage (new dents, scratches)"], ["plate_reg", "License plate & registration sticker"], ["engine_oil", "Engine oil level"], ["coolant", "Coolant level"], ["brake_fluid", "Brake fluid level"], ["ps_fluid", "Power steering fluid"], ["battery", "Battery terminals (corrosion, tight)"], ["belts_hoses", "Belts & hoses (visual)"], ["seatbelt", "Seatbelt (driver & passenger)"], ["horn", "Horn"], ["brakes", "Brakes (feel, stopping)"], ["parking_brake", "Parking brake"], ["gauges_warnings", "Gauges & warning lights (check engine, etc.)"], ["climate", "Climate control / defrost"], ["interior", "Cleanliness / condition of interior"], ["toolbox", "Toolbox / storage secure (if pickup/utility)"], ["bed_tiedowns", "Bed tie-downs (if pickup)"], ["ladder_rack", "Ladder rack condition (if equipped)"], ["beacon", "Beacon / warning light (if equipped)"]]};
+
+var METER_TYPE = {"EX": "hours", "BH": "hours", "LD": "hours", "SL": "hours", "SS": "hours", "DZ": "hours", "MG": "hours", "AR": "hours", "AP": "hours", "FL_RL": "hours", "ML": "hours", "CT": "miles", "DT": "miles", "WT": "miles", "ST": "miles", "VT": "miles", "SATC": "miles", "ARROW": "none", "LIGHT": "hours", "PCMB": "none", "DUMP_TR": "none", "VEH": "miles"};
+
+var CAT_NAMES = {"EX": "Excavator", "BH": "Backhoe", "LD": "Loader (Rubber Tire)", "SL": "Skip Loader", "SS": "Skid Steer", "DZ": "Dozer / Scraper / Pipelayer", "MG": "Motor Grader", "AR": "Roller / Compactor", "AP": "Asphalt Paver / Milling Machine", "FL_RL": "Forklift / Reach Lift", "ML": "Manlift / Scissor Lift", "CT": "Crane Truck", "DT": "Dump Truck / Heavy Truck", "WT": "Water Truck", "ST": "Lowbed Truck", "VT": "Vac Truck / Hydroex", "SATC": "SATC Truck", "ARROW": "Arrow Board (Tow-Behind)", "LIGHT": "Light Tower (Tow-Behind)", "PCMB": "Message Board / PCMB (Tow-Behind)", "DUMP_TR": "Dump Trailer", "VEH": "Vehicle (Pickup / Utility / Auto)"};
+
+
+var pc=0,$=function(id){return document.getElementById(id)};
+
+function showStep(n){var s=document.querySelectorAll('.step');for(var i=0;i<s.length;i++)s[i].classList.remove('active');$('step'+n).classList.add('active');window.scrollTo(0,0)}
+
+function populateUnits(){
+  var c=$('fCat').value,sel=$('fUnit');
+  sel.innerHTML='<option value="">Select unit</option>';
+  $('ow').style.display=c==='XX'?'block':'none';
+  if(c&&UNITS[c]){
+    for(var i=0;i<UNITS[c].length;i++){
+      var u=UNITS[c][i];
+      sel.innerHTML+='<option value="'+u.v+'">'+u.l+'</option>';
+    }
+  }
+  // meter type
+  var mt=METER_TYPE[c]||'none';
+  $('mw').style.display=mt==='miles'?'block':'none';
+  $('hw').style.display=mt==='hours'?'block':'none';
+}
+
+function buildChecklist(){
+  var c=$('fCat').value,el=$('clL');
+  el.innerHTML='';
+  if(!c||!CHECKLISTS[c])return;
+  var items=CHECKLISTS[c];
+  var h='';
+  for(var i=0;i<items.length;i++){
+    var id=items[i][0],lb=items[i][1];
+    h+='<div class="ci" id="cli_'+id+'">';
+    h+='<div class="cn">'+lb+'</div>';
+    h+='<div class="co">';
+    h+='<input type="radio" name="cl_'+id+'" id="cl_'+id+'_g" value="good"><label for="cl_'+id+'_g">Good</label>';
+    h+='<input type="radio" name="cl_'+id+'" id="cl_'+id+'_a" value="attention"><label for="cl_'+id+'_a">Needs<br>Attention</label>';
+    h+='<input type="radio" name="cl_'+id+'" id="cl_'+id+'_o" value="oos"><label for="cl_'+id+'_o">Out of<br>Service</label>';
+    h+='<input type="radio" name="cl_'+id+'" id="cl_'+id+'_n" value="na"><label for="cl_'+id+'_n">N/A</label>';
+    h+='</div>';
+    h+='<div class="cln" id="cln_'+id+'"><textarea name="cln_'+id+'" placeholder="Describe the issue..."></textarea></div>';
+    h+='</div>';
+  }
+  el.innerHTML=h;
+  // Bind change events for notes visibility
+  var radios=el.querySelectorAll('input[type="radio"]');
+  for(var j=0;j<radios.length;j++){
+    radios[j].addEventListener('change',function(){
+      var cid=this.name.replace('cl_','');
+      var nd=$('cln_'+cid);
+      if(nd){
+        if(this.value==='attention'||this.value==='oos')nd.classList.add('show');
+        else nd.classList.remove('show');
+      }
+      var ci=$('cli_'+cid);
+      if(ci)ci.classList.remove('inc');
+    });
+  }
+}
+
+function getClData(){
+  var c=$('fCat').value,d={};
+  if(!c||!CHECKLISTS[c])return d;
+  var items=CHECKLISTS[c];
+  for(var i=0;i<items.length;i++){
+    var id=items[i][0];
+    var ck=document.querySelector('input[name="cl_'+id+'"]:checked');
+    var nt=document.querySelector('textarea[name="cln_'+id+'"]');
+    d[id]={status:ck?ck.value:'',notes:nt?nt.value:''};
+  }
+  return d;
+}
+
+function validateCl(){
+  var d=getClData(),m=[];
+  for(var id in d){if(d[id].status===''){m.push(id);var e=$('cli_'+id);if(e)e.classList.add('inc');}}
+  if(m.length>0){
+    alert(m.length+' item(s) not completed. Please check all items.');
+    var f=$('cli_'+m[0]);if(f)f.scrollIntoView({behavior:'smooth',block:'center'});
+    return false;
+  }
+  return true;
+}
+
+function buildSummary(){
+  var cl=getClData(),g=0,a=0,o=0,n=0,iss=[];
+  for(var id in cl){
+    if(cl[id].status==='good')g++;
+    else if(cl[id].status==='attention'){a++;iss.push('NEEDS ATTENTION: '+id+(cl[id].notes?' - '+cl[id].notes:''));}
+    else if(cl[id].status==='oos'){o++;iss.push('OUT OF SERVICE: '+id+(cl[id].notes?' - '+cl[id].notes:''));}
+    else if(cl[id].status==='na')n++;
+  }
+  var cs=$('fCat'),cn=cs.options[cs.selectedIndex]?cs.options[cs.selectedIndex].text:'';
+  var it=document.querySelector('input[name="itype"]:checked');
+  var gr=document.querySelector('input[name="grease"]:checked');
+  var h='';
+  h+='<div class="sr"><span class="sl">Operator</span><span class="sv">'+($('fName').value||'-')+'</span></div>';
+  h+='<div class="sr"><span class="sl">Type</span><span class="sv">'+(it?(it.value==='transfer'?'Transfer/Receiving':'Daily Pre-Use'):'-')+'</span></div>';
+  h+='<div class="sr"><span class="sl">Equipment</span><span class="sv">'+cn+'</span></div>';
+  h+='<div class="sr"><span class="sl">Unit</span><span class="sv">'+($('fUnit').value||'-')+'</span></div>';
+  h+='<div class="sr"><span class="sl">Job Number</span><span class="sv">'+($('fJob').value||'-')+'</span></div>';
+  h+='<div class="sr"><span class="sl">Job Site</span><span class="sv">'+($('fSite').value||'-')+'</span></div>';
+  h+='<div class="sr"><span class="sl">Last Greased</span><span class="sv">'+(gr?gr.value.replace('_',' '):'-')+'</span></div>';
+  h+='<div class="sr"><span class="sl sg">Good</span><span class="sv sg">'+g+'</span></div>';
+  if(a>0)h+='<div class="sr"><span class="sl sy">Needs Attention</span><span class="sv sy">'+a+'</span></div>';
+  if(o>0)h+='<div class="sr"><span class="sl srd">Out of Service</span><span class="sv srd">'+o+'</span></div>';
+  h+='<div class="sr"><span class="sl">Photos</span><span class="sv">'+pc+'</span></div>';
+  $('sum').innerHTML=h;
+  var al='';
+  if(o>0)al+='<div class="ab ar">⚠️ OUT OF SERVICE items detected. Aaron, Jerry, Derek, Karun, and Kirby will be notified.</div>';
+  if(a>0)al+='<div class="ab ay">⚡ NEEDS ATTENTION items detected. Aaron, Jerry, Derek, Karun, and Kirby will be notified.</div>';
+  $('alr').innerHTML=al;
+}
+
+function doSubmit(){
+  var now=new Date();
+  var id='GBE-'+now.getFullYear()+String(now.getMonth()+1).padStart(2,'0')+String(now.getDate()).padStart(2,'0')+'-'+String(now.getHours()).padStart(2,'0')+String(now.getMinutes()).padStart(2,'0')+String(now.getSeconds()).padStart(2,'0');
+  var cl=getClData(),hasO=false,hasA=false;
+  for(var k in cl){if(cl[k].status==='oos')hasO=true;if(cl[k].status==='attention')hasA=true;}
+  var it=document.querySelector('input[name="itype"]:checked');
+  var gr=document.querySelector('input[name="grease"]:checked');
+  var data={
+    inspectionId:id,timestamp:now.toISOString(),
+    operator:$('fName').value,inspectionType:it?it.value:'',
+    transferFrom:$('fXfer')?$('fXfer').value:'',
+    equipmentType:$('fCat').value,otherEquipDesc:$('fOther')?$('fOther').value:'',
+    unitNumber:$('fUnit').value,
+    jobNumber:$('fJob').value,jobSite:$('fSite').value,
+    odometer:$('fOdo').value,hourmeter:$('fHr').value,
+    fuelLevel:$('fFuel').value,lastGreased:gr?gr.value:'',
+    checklist:cl,additionalNotes:$('fNotes').value,
+    damageNotes:$('fDmg')?$('fDmg').value:'',
+    photoCount:(window._inspectionPhotos||[]).length,
+    photos:window._inspectionPhotos||[]
+  };
+  // POST to Google Apps Script
+  fetch('https://script.google.com/macros/s/AKfycbxMHCFmafkTJhxTdLzHjIdqazD9VBTuVRWTMKBZWcCiDsfYF-h1n61EzQQ3iTbl8RSUUg/exec',{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+  $('fw').style.display='none';
+  $('ss').classList.add('active');
+  $('rId').textContent='Reference: '+id;
+  var msg='';
+  if(hasO)msg='🔴 OUT OF SERVICE alert sent to Aaron, Jerry, Derek, Karun, and Kirby.';
+  else if(hasA)msg='🟡 NEEDS ATTENTION alert sent to Aaron, Jerry, Derek, Karun, and Kirby.';
+  else msg='🟢 All items passed. No alerts triggered.';
+  $('aMsg').textContent=msg;
+  window.scrollTo(0,0);
+}
+
+function navigate(e){
+  var hr=this.getAttribute('href');
+  if(!hr||hr.charAt(0)!=='#')return;
+  e.preventDefault();
+  var t=hr.substring(1);
+  if(t==='step1'){showStep(1);return}
+  if(t==='step2'){showStep(2);return}
+  if(t==='step3'){buildChecklist();showStep(3);return}
+  if(t==='step4'){if(!validateCl())return;showStep(4);return}
+  if(t==='step5'){buildSummary();showStep(5);return}
+  if(t==='submit'){doSubmit();return}
+  if(t==='reset'){location.reload();return}
+}
+
+// Equipment type change
+$('fCat').addEventListener('change',populateUnits);
+
+// Inspection type
+var ir=document.querySelectorAll('input[name="itype"]');
+for(var i=0;i<ir.length;i++){
+  ir[i].addEventListener('change',function(){
+    var x=this.value==='transfer';
+    $('xw').style.display=x?'block':'none';
+    $('dw').style.display=x?'block':'none';
+  });
+}
+
+// Photos - resize and convert to base64 for email attachment
+if(!window._inspectionPhotos)window._inspectionPhotos=[];
+$('fPh').addEventListener('change',function(){
+  var f=this.files;
+  for(var i=0;i<f.length;i++){
+    (function(file){
+      // Thumbnail preview
+      var r=new FileReader();
+      r.onload=function(e){var img=document.createElement('img');img.src=e.target.result;$('pTh').appendChild(img)};
+      r.readAsDataURL(file);
+      // Resize & store base64 for submission
+      var r2=new FileReader();
+      r2.onload=function(e){
+        var img=new Image();
+        img.onload=function(){
+          var canvas=document.createElement('canvas');
+          var maxW=1200,w=img.width,h=img.height;
+          if(w>maxW){h=Math.round(h*maxW/w);w=maxW;}
+          canvas.width=w;canvas.height=h;
+          canvas.getContext('2d').drawImage(img,0,0,w,h);
+          var dataUrl=canvas.toDataURL('image/jpeg',0.7);
+          window._inspectionPhotos.push(dataUrl.split(',')[1]);
+          pc=window._inspectionPhotos.length;
+        };
+        img.src=e.target.result;
+      };
+      r2.readAsDataURL(file);
+    })(f[i]);
+  }
+});
+
+// Nav
+var lk=document.querySelectorAll('a.nb');
+for(var j=0;j<lk.length;j++)lk[j].addEventListener('click',navigate);
+
+// Footer
+var now=new Date();
+$('fTs').textContent='Golden Bear Equipment Co. | A Hays Group Company | '+now.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+})();
+</script>
+</body>
+</html>
